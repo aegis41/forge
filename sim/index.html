@@ -661,12 +661,27 @@ function showStatCalc(statName){
   let lines=[];
   lines.push({t:`// ${statName.toUpperCase()} CALCULATION`,cls:'heading'});
 
-  // attributes breakdown
+  // attributes breakdown — show gear contributions per slot
   lines.push({t:`Attributes (class + species + gear):`,cls:'note'});
-  lines.push({t:`  Physical   = ${base.class.physical} + ${base.species.physical} + ${eqMods.physical} = ${p}`,cls:''});
-  lines.push({t:`  Mental     = ${base.class.mental} + ${base.species.mental} + ${eqMods.mental} = ${m}`,cls:''});
-  lines.push({t:`  Supernatural = ${base.class.supernatural} + ${base.species.supernatural} + ${eqMods.supernatural} = ${s}`,cls:''});
+  lines.push({t:`  Physical   = ${base.class.physical} (class) + ${base.species.physical} (species) + ${eqMods.physical} (gear) = ${p}`,cls:''});
+  lines.push({t:`  Mental     = ${base.class.mental} (class) + ${base.species.mental} (species) + ${eqMods.mental} (gear) = ${m}`,cls:''});
+  lines.push({t:`  Supernatural = ${base.class.supernatural} (class) + ${base.species.supernatural} (species) + ${eqMods.supernatural} (gear) = ${s}`,cls:''});
   lines.push({t:`  Highest    = ${highest}`,cls:''});
+
+  // gear detail — which slots contribute to attributes
+  const gearLines=[];
+  SLOTS.forEach(slot=>{
+    const itemId=char.equipment[slot];
+    if(!itemId)return;
+    const item=GEAR[char.setting][slot]?.find(g=>g.id===itemId);
+    if(!item)return;
+    const modStr=Object.entries(item.mods).map(([k,v])=>`${k.charAt(0).toUpperCase()}+${v}`).join(' ');
+    gearLines.push({t:`  [${SLOT_LABELS[slot]}] ${item.name} (${item.rarity}): ${modStr}`,cls:'note'});
+  });
+  if(gearLines.length){
+    lines.push({t:`Gear equipped:`,cls:'note'});
+    gearLines.forEach(l=>lines.push(l));
+  }
 
   lines.push({t:`Base formula:`,cls:'note'});
   if(statName==='vitality'){
@@ -712,15 +727,26 @@ function showAttackCalc(result,attackerName,defenderName,skillsUsed){
   let lines=[];
   lines.push({t:`// ATTACK: ${attackerName} → ${defenderName}`,cls:'heading'});
   if(skillsUsed&&skillsUsed.length) lines.push({t:`Skills active: ${skillsUsed.join(', ')}`,cls:'skill'});
-  lines.push({t:`Power: ${result.rawDmg} (base roll)`,cls:''});
+  lines.push({t:`Attack roll:`,cls:'note'});
+  lines.push({t:`  Base Power + variance (0–30%) − 15% = raw damage`,cls:''});
+  lines.push({t:`  Raw damage this roll: ${result.rawDmg}`,cls:''});
   if(result.evaded){
-    lines.push({t:`Evade check: rolled ${result.evadeRoll} vs ${result.defEvade}% → EVADED`,cls:'miss'});
+    lines.push({t:`Evade check:`,cls:'note'});
+    lines.push({t:`  Rolled ${result.evadeRoll} vs threshold ${result.defEvade}%`,cls:''});
+    lines.push({t:`  ${result.evadeRoll} < ${result.defEvade} → EVADED`,cls:'miss'});
     lines.push({t:`Result: 0 damage`,cls:'miss'});
   } else {
-    lines.push({t:`Evade check: rolled ${result.evadeRoll} vs ${result.defEvade}% → HIT`,cls:'hit'});
-    lines.push({t:`After Block (−${result.defBlock}): ${result.rawDmg} − ${result.defBlock} = ${result.afterBlock}`,cls:''});
-    lines.push({t:`After Soak (${result.defSoak}%): ${result.afterBlock} × ${(1-result.defSoak/100).toFixed(2)} = ${result.afterSoak}`,cls:''});
-    if(result.isCrit) lines.push({t:`Critical hit! ×1.5 = ${result.finalDmg}`,cls:'crit'});
+    lines.push({t:`Evade check:`,cls:'note'});
+    lines.push({t:`  Rolled ${result.evadeRoll} vs threshold ${result.defEvade}%`,cls:''});
+    lines.push({t:`  ${result.evadeRoll} >= ${result.defEvade} → HIT`,cls:'hit'});
+    lines.push({t:`Block reduction:`,cls:'note'});
+    lines.push({t:`  ${result.rawDmg} − ${result.defBlock} (block) = ${result.afterBlock}`,cls:''});
+    lines.push({t:`Soak reduction:`,cls:'note'});
+    lines.push({t:`  ${result.afterBlock} × ${((1-result.defSoak/100)*100).toFixed(0)}% (${result.defSoak}% soaked) = ${result.afterSoak}`,cls:''});
+    if(result.isCrit){
+      lines.push({t:`Critical hit! (10% chance):`,cls:'note'});
+      lines.push({t:`  ${result.afterSoak} × 1.5 = ${result.finalDmg}`,cls:'crit'});
+    }
     lines.push({t:`Final damage: ${result.finalDmg}`,cls:'result'});
   }
   renderCalc(lines);
@@ -907,6 +933,8 @@ function toggleImprint(id){
   char.imprints=char.imprints.includes(id)?char.imprints.filter(i=>i!==id):[...char.imprints,id];
   computed.dirty=true;
   renderCharacter();
+  const heading=document.getElementById('calc-panel').querySelector('.calc-line.heading');
+  if(heading){const m=heading.textContent.match(/\/\/ (\w+) CALCULATION/);if(m)showStatCalc(m[1].toLowerCase());}
 }
 
 function toggleSkill(id){
@@ -923,6 +951,8 @@ function buildEnemy(){
   const s=SETTINGS_DATA[char.setting];
   const eType=document.getElementById('sel-enemy').value;
   const diff=parseFloat(document.getElementById('sel-diff').value);
+  const diffLabel={0.6:'WEAK',1:'NORMAL',1.5:'STRONG',2.2:'ELITE'}[diff]||'NORMAL';
+  const diffColor={0.6:'#6a8a6a',1:'#3ddc84',1.5:'#ffb830',2.2:'#ff4444'}[diff]||'#3ddc84';
   const eData=s.enemies.find(e=>e.id===eType)||s.enemies[0];
   const attr={physical:Math.round(eData.p*diff),mental:Math.round(eData.m*diff),supernatural:Math.round(eData.s*diff)};
   const stats=calcStats(attr,char.level,[]);
@@ -931,7 +961,8 @@ function buildEnemy(){
   document.getElementById('es-power').textContent=stats.power;
   document.getElementById('es-evade').textContent=stats.evade+'%';
   document.getElementById('es-block').textContent=stats.block;
-  document.getElementById('enemy-name').textContent=enemy.name;
+  document.getElementById('enemy-name').innerHTML=
+    `${eData.name} <span style="font-size:8px;letter-spacing:1px;color:${diffColor};border:1px solid ${diffColor};padding:1px 5px;margin-left:4px;vertical-align:middle">${diffLabel}</span>`;
   document.getElementById('enemy-stat-preview').innerHTML=
     [['VIT',stats.vitality],['FOC',stats.focus],['PWR',stats.power],['EVD',stats.evade+'%'],['BLK',stats.block],['SOK',stats.soak+'%']]
     .map(([l,v])=>`<div class="mini-stat"><div class="mini-stat-label">${l}</div><div class="mini-stat-val">${v}</div></div>`).join('');

@@ -188,6 +188,10 @@ body{display:flex;align-items:center;justify-content:center;font-family:var(--bo
   <div class="corner corner-br"></div>
 </div>
 
+<div class="class" id="screen-game">
+  <h1 style="color: white;">Hello World</h1>
+</div>
+
 <script>
 // ── DATA ──
 const SETTINGS = [
@@ -598,7 +602,8 @@ function showReveal(){
 }
 
 function beginGame(){
-  alert(`Game engine coming soon!\n\nYour character: ${state.finalClass.name} (${state.finalSpecies.name})\nReady to idle.`);
+  //alert(`Game engine coming soon!\n\nYour character: ${state.finalClass.name} (${state.finalSpecies.name})\nReady to idle.`);
+  showScreen('screen-game');
 }
 
 function restartFlow(){

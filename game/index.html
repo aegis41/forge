@@ -1312,7 +1312,8 @@ function showToast(msg,duration){
 function renderSettings(){
   document.getElementById('settings-grid').innerHTML=SETTINGS.map(s=>{
     const locked=s.meta.locked;
-    return '<div class="setting-tile'+(locked?' locked':'')+'"'+(locked?'':' onclick="selectSetting(\''+s.id+'\')">  ')+'>'+(locked?'<div class="tile-locked-badge">Coming Soon</div>':'')+
+    const clickAttr=locked?'':' onclick="selectSetting(\'' +s.id+ '\')"';
+    return '<div class="setting-tile'+(locked?' locked':'')+'"'+clickAttr+'>'+(locked?'<div class="tile-locked-badge">Coming Soon</div>':'')+
       '<div class="tile-icon">'+s.icon+'</div>'+
       '<div class="tile-name">'+s.meta.name+'</div>'+
       '<div class="tile-desc">'+s.meta.description+'</div>'+

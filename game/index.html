@@ -9,31 +9,19 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --parchment:#f4ede0;
-  --parchment2:#ede0c8;
-  --parchment3:#e0cead;
-  --ink:#1a1008;
-  --ink2:#3d2b10;
-  --ink3:#6b4e2a;
-  --crimson:#8b1a1a;
-  --crimson2:#c0392b;
-  --crimson-light:#f5e6e6;
-  --gold:#b8860b;
-  --gold2:#d4a017;
+  --parchment:#f4ede0;--parchment2:#ede0c8;--parchment3:#e0cead;
+  --ink:#1a1008;--ink2:#3d2b10;--ink3:#6b4e2a;
+  --crimson:#8b1a1a;--crimson2:#c0392b;--crimson-light:#f5e6e6;
+  --gold:#b8860b;--gold2:#d4a017;--gold-dim:rgba(184,134,11,0.15);
   --shadow:rgba(26,16,8,0.15);
-  --display:'Cinzel',serif;
-  --body:'Crimson Pro',serif;
+  --display:"Cinzel",serif;--body:"Crimson Pro",serif;
 }
 html,body{height:100%;background:var(--ink);overflow:hidden}
 body{display:flex;align-items:center;justify-content:center;font-family:var(--body)}
-
-/* ── SCREENS ── */
 .screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .6s}
 .screen.active{opacity:1;pointer-events:all}
-
-/* ── INTRO ── */
 #screen-intro{flex-direction:column;background:var(--ink);overflow:hidden}
-.intro-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, #2d1a08 0%, #0a0603 70%)}
+.intro-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#2d1a08 0%,#0a0603 70%)}
 .intro-runes{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:120px;color:rgba(184,134,11,0.04);letter-spacing:40px;user-select:none;white-space:nowrap}
 .intro-content{position:relative;text-align:center;padding:40px}
 .intro-emblem{width:80px;height:80px;margin:0 auto 32px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--gold);animation:pulse 3s ease-in-out infinite}
@@ -43,59 +31,48 @@ body{display:flex;align-items:center;justify-content:center;font-family:var(--bo
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .intro-btn{font-family:var(--display);font-size:13px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--ink);background:var(--gold);border:none;padding:16px 48px;cursor:pointer;transition:all .2s;animation:fadeUp .8s .4s ease both;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
 .intro-btn:hover{background:var(--gold2);transform:translateY(-2px)}
-
-/* ── SETTING SELECT ── */
 #screen-settings{background:var(--parchment);flex-direction:column;overflow-y:auto;padding:40px 20px}
 .settings-header{text-align:center;margin-bottom:48px}
 .settings-title{font-family:var(--display);font-size:clamp(20px,4vw,36px);font-weight:700;color:var(--ink);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}
 .settings-rule{width:120px;height:1px;background:var(--gold);margin:16px auto;position:relative}
-.settings-rule::before,.settings-rule::after{content:'◆';position:absolute;top:-8px;color:var(--gold);font-size:10px}
-.settings-rule::before{left:-16px}
-.settings-rule::after{right:-16px}
+.settings-rule::before,.settings-rule::after{content:"\25C6";position:absolute;top:-8px;color:var(--gold);font-size:10px}
+.settings-rule::before{left:-16px}.settings-rule::after{right:-16px}
 .settings-sub{font-size:17px;color:var(--ink3);font-style:italic}
 .settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:960px;width:100%}
 .setting-tile{background:var(--parchment2);border:1px solid var(--parchment3);padding:32px 28px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
-.setting-tile::before{content:'';position:absolute;inset:0;background:var(--crimson);opacity:0;transition:opacity .25s}
+.setting-tile::before{content:"";position:absolute;inset:0;background:var(--crimson);opacity:0;transition:opacity .25s}
 .setting-tile:hover::before{opacity:.04}
 .setting-tile:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow)}
 .setting-tile.locked{opacity:.6;cursor:not-allowed}
 .setting-tile.locked:hover{transform:none;box-shadow:none;border-color:var(--parchment3)}
-.setting-tile.locked::before{display:none}
 .tile-icon{font-size:36px;margin-bottom:16px}
 .tile-name{font-family:var(--display);font-size:20px;font-weight:700;color:var(--ink);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
 .tile-desc{font-size:15px;color:var(--ink3);line-height:1.6;font-style:italic;margin-bottom:16px}
 .tile-meta{display:flex;gap:12px;flex-wrap:wrap}
 .tile-tag{font-size:11px;font-family:var(--display);letter-spacing:1px;color:var(--ink3);border:1px solid var(--parchment3);padding:3px 10px;text-transform:uppercase}
 .tile-locked-badge{position:absolute;top:16px;right:16px;font-family:var(--display);font-size:9px;letter-spacing:2px;color:var(--ink3);border:1px solid var(--parchment3);padding:3px 8px;text-transform:uppercase}
-
-/* ── QUESTION ── */
 #screen-question{background:var(--parchment);flex-direction:column;overflow:hidden}
 .question-wrap{width:100%;max-width:720px;padding:40px 24px;display:flex;flex-direction:column;min-height:100vh;justify-content:center}
 .q-progress{display:flex;align-items:center;gap:12px;margin-bottom:48px}
-.q-progress-track{flex:1;height:2px;background:var(--parchment3);position:relative}
+.q-progress-track{flex:1;height:2px;background:var(--parchment3)}
 .q-progress-fill{height:100%;background:var(--gold);transition:width .5s ease}
 .q-progress-label{font-family:var(--display);font-size:11px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;white-space:nowrap}
 .q-setting-label{font-family:var(--display);font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
 .q-text{font-family:var(--display);font-size:clamp(18px,3vw,26px);font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:40px;position:relative;padding-left:24px}
-.q-text::before{content:'"';position:absolute;left:0;top:-8px;font-size:48px;color:var(--gold);opacity:.4;font-family:var(--body);line-height:1}
 .q-answers{display:flex;flex-direction:column;gap:12px}
 .q-answer{background:none;border:1px solid var(--parchment3);padding:18px 24px;text-align:left;cursor:pointer;transition:all .2s;font-family:var(--body);font-size:16px;color:var(--ink2);line-height:1.5;position:relative;overflow:hidden}
-.q-answer::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transition:transform .2s}
+.q-answer::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transition:transform .2s}
 .q-answer:hover{border-color:var(--gold);background:rgba(184,134,11,0.05);color:var(--ink);padding-left:32px}
 .q-answer:hover::before{transform:scaleY(1)}
-.q-answer.selected{border-color:var(--crimson);background:var(--crimson-light);color:var(--ink);padding-left:32px}
-.q-answer.selected::before{background:var(--crimson);transform:scaleY(1)}
+.q-answer.choosing{opacity:.5;pointer-events:none}
+.q-answer.chosen{border-color:var(--crimson);background:var(--crimson-light);color:var(--ink);padding-left:32px}
+.q-answer.chosen::before{background:var(--crimson);transform:scaleY(1)}
 .q-answer-letter{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:1px;color:var(--ink3);margin-right:12px;text-transform:uppercase}
 .q-nav{display:flex;justify-content:flex-start;margin-top:32px}
 .q-back{font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--ink3);background:none;border:1px solid var(--parchment3);padding:10px 24px;cursor:pointer;transition:all .2s}
 .q-back:hover{border-color:var(--ink3);color:var(--ink)}
-.q-answer.choosing{opacity:.5;pointer-events:none}
-.q-answer.chosen{border-color:var(--crimson);background:var(--crimson-light);color:var(--ink);padding-left:32px}
-.q-answer.chosen::before{background:var(--crimson);transform:scaleY(1)}
 .q-fade{animation:qFadeIn .4s ease both}
 @keyframes qFadeIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
-
-/* ── TIE RESOLUTION ── */
 #screen-tie{background:var(--parchment);flex-direction:column;overflow-y:auto;padding:40px 20px}
 .tie-wrap{max-width:600px;width:100%;text-align:center}
 .tie-title{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--ink);margin-bottom:12px}
@@ -107,10 +84,8 @@ body{display:flex;align-items:center;justify-content:center;font-family:var(--bo
 .tie-option-desc{font-size:15px;color:var(--ink3);font-style:italic}
 .tie-random{font-family:var(--display);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--ink3);background:none;border:1px solid var(--parchment3);padding:12px 28px;cursor:pointer;transition:all .2s;width:100%}
 .tie-random:hover{border-color:var(--ink3);color:var(--ink)}
-
-/* ── REVEAL ── */
 #screen-reveal{background:var(--ink);flex-direction:column;overflow-y:auto;padding:40px 20px}
-.reveal-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%, #2d1a08 0%, #080503 70%)}
+.reveal-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,#2d1a08 0%,#080503 70%)}
 .reveal-wrap{position:relative;max-width:680px;width:100%;text-align:center}
 .reveal-announce{font-family:var(--display);font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;animation:fadeUp .6s ease both}
 .reveal-name{font-family:var(--display);font-size:clamp(28px,6vw,56px);font-weight:900;color:var(--parchment);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;animation:fadeUp .6s .2s ease both;text-shadow:0 0 60px rgba(184,134,11,0.3)}
@@ -129,34 +104,150 @@ body{display:flex;align-items:center;justify-content:center;font-family:var(--bo
 .reveal-btn-primary:hover{background:var(--gold2)}
 .reveal-btn-ghost{color:var(--parchment3);background:none;border:1px solid rgba(244,237,224,0.2)}
 .reveal-btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-
-/* ── DECORATIVE ── */
 .corner{position:absolute;width:40px;height:40px;border-color:var(--gold);border-style:solid;opacity:.4}
 .corner-tl{top:20px;left:20px;border-width:2px 0 0 2px}
 .corner-tr{top:20px;right:20px;border-width:2px 2px 0 0}
 .corner-bl{bottom:20px;left:20px;border-width:0 0 2px 2px}
 .corner-br{bottom:20px;right:20px;border-width:0 2px 2px 0}
+#screen-game{background:var(--ink);flex-direction:column;overflow:hidden;align-items:stretch;justify-content:flex-start}
+.game-topbar{background:rgba(26,16,8,0.95);border-bottom:1px solid rgba(184,134,11,0.2);padding:0 20px;height:48px;display:flex;align-items:center;gap:20px;flex-shrink:0}
+.game-logo{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:4px;color:var(--gold);text-transform:uppercase}
+.game-char-name{font-family:var(--display);font-size:11px;letter-spacing:2px;color:var(--parchment3);text-transform:uppercase}
+.game-economy{display:flex;gap:16px;margin-left:auto;align-items:center}
+.economy-item{display:flex;align-items:center;gap:5px;font-family:var(--display);font-size:10px;letter-spacing:1px;color:var(--parchment3)}
+.economy-val{color:var(--gold);font-weight:700}
+.game-nav{display:flex;border-bottom:1px solid rgba(184,134,11,0.15);flex-shrink:0;background:rgba(26,16,8,0.8)}
+.game-tab{flex:1;padding:10px;text-align:center;font-family:var(--display);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;max-width:140px}
+.game-tab:hover{color:var(--parchment3)}
+.game-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.game-body{flex:1;overflow:hidden;position:relative}
+.game-panel{position:absolute;inset:0;overflow-y:auto;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.game-panel.active{opacity:1;pointer-events:all}
+.combat-layout{display:grid;grid-template-columns:1fr 300px;gap:16px;max-width:1100px;margin:0 auto}
+.combat-main{display:flex;flex-direction:column;gap:12px}
+.combat-stage{background:rgba(244,237,224,0.03);border:1px solid rgba(184,134,11,0.12);padding:20px;position:relative;overflow:hidden}
+.vs-row{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:16px}
+.combatant-block{background:rgba(26,16,8,0.6);border:1px solid rgba(184,134,11,0.15);padding:14px}
+.combatant-block.player-block{border-color:rgba(184,134,11,0.3)}
+.combatant-block.enemy-block{border-color:rgba(139,26,26,0.4)}
+.cb-name{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.cb-name.gold{color:var(--gold)}.cb-name.crimson{color:var(--crimson2)}
+.cb-bar-label{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:3px;font-family:var(--display);letter-spacing:.5px}
+.cb-bar-track{height:8px;background:rgba(26,16,8,0.8);border:1px solid rgba(184,134,11,0.1);margin-bottom:6px;overflow:hidden}
+.cb-bar-fill{height:100%;transition:width .4s ease}
+.cb-bar-fill.vit{background:linear-gradient(90deg,#8b1a1a,#c0392b)}
+.cb-bar-fill.vit.high{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.cb-bar-fill.foc{background:linear-gradient(90deg,#1a3d8b,#2980b9)}
+.cb-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:6px}
+.cb-mini-stat{background:rgba(26,16,8,0.6);padding:4px;text-align:center;border:1px solid rgba(184,134,11,0.08)}
+.cb-mini-label{font-size:8px;font-family:var(--display);letter-spacing:.5px;color:var(--ink3);text-transform:uppercase}
+.cb-mini-val{font-size:11px;font-family:var(--display);color:var(--parchment3);font-weight:700}
+.vs-emblem{font-family:var(--display);font-size:16px;font-weight:900;color:var(--ink3);text-align:center;letter-spacing:2px}
+.companion-strip{background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.15);padding:10px 14px;display:flex;align-items:center;gap:12px}
+.companion-strip-label{font-family:var(--display);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3)}
+.companion-strip-name{font-family:var(--display);font-size:11px;color:var(--gold);letter-spacing:1px}
+.companion-strip-bar{flex:1;height:4px;background:rgba(26,16,8,0.6)}
+.companion-strip-fill{height:100%;background:var(--gold);transition:width .3s}
+.companion-strip-empty{font-size:11px;color:var(--ink3);font-style:italic}
+.combat-log{background:rgba(26,16,8,0.7);border:1px solid rgba(184,134,11,0.1);display:flex;flex-direction:column;min-height:180px}
+.log-header{padding:8px 12px;border-bottom:1px solid rgba(184,134,11,0.1);font-family:var(--display);font-size:9px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;flex-shrink:0;display:flex;justify-content:space-between;align-items:center}
+.log-clear{background:none;border:none;font-family:var(--display);font-size:8px;color:var(--ink3);cursor:pointer;letter-spacing:1px;text-transform:uppercase}
+.log-clear:hover{color:var(--parchment3)}
+.log-entries{overflow-y:auto;padding:8px;flex:1;display:flex;flex-direction:column;gap:2px;max-height:200px}
+.log-entry{font-size:11px;line-height:1.5;padding:2px 6px;border-left:2px solid transparent;font-family:var(--body)}
+.log-entry.le-round{border-left-color:var(--ink3);color:var(--ink3);font-family:var(--display);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.log-entry.le-hit{border-left-color:var(--gold);color:var(--parchment3)}
+.log-entry.le-miss{border-left-color:var(--ink3);color:var(--ink3)}
+.log-entry.le-crit{border-left-color:var(--crimson2);color:var(--crimson2)}
+.log-entry.le-death{border-left-color:var(--crimson);color:var(--crimson);font-weight:600}
+.log-entry.le-loot{border-left-color:var(--gold2);color:var(--gold2)}
+.log-entry.le-info{border-left-color:var(--ink2);color:var(--ink3)}
+.log-entry.le-system{color:var(--ink3);font-size:10px;font-style:italic}
+.combat-sidebar{display:flex;flex-direction:column;gap:12px}
+.sidebar-section{background:rgba(244,237,224,0.03);border:1px solid rgba(184,134,11,0.12);padding:14px}
+.ss-title{font-family:var(--display);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(184,134,11,0.1)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(184,134,11,0.06)}
+.stat-row:last-child{border-bottom:none}
+.stat-name{font-size:10px;color:var(--ink3);font-family:var(--display);letter-spacing:.5px;text-transform:uppercase}
+.stat-val{font-family:var(--display);font-size:12px;font-weight:700;color:var(--parchment3)}
+.stat-val.gold{color:var(--gold)}
+.eq-slot-row{display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+.eq-slot-name{color:var(--ink3);font-family:var(--display);font-size:9px;text-transform:uppercase;min-width:70px}
+.eq-slot-item{color:var(--parchment3);font-style:italic;text-align:right;font-size:10px}
+.eq-slot-item.empty{color:var(--ink3)}
+.rarity-common{color:#9a9a7a}.rarity-uncommon{color:var(--parchment3)}.rarity-rare{color:#7ab4f5}.rarity-legendary{color:var(--gold)}.rarity-epic{color:#cc88ff}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.inv-item{background:rgba(244,237,224,0.03);border:1px solid rgba(184,134,11,0.12);padding:14px}
+.inv-item-name{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.inv-item-meta{font-size:10px;color:var(--ink3);font-family:var(--display);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.inv-item-desc{font-size:12px;color:var(--ink3);font-style:italic;margin-bottom:8px;line-height:1.4}
+.inv-item-stats{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.inv-stat-pill{font-size:10px;font-family:var(--display);padding:2px 8px;border:1px solid rgba(184,134,11,0.2);color:var(--gold)}
+.inv-item-actions{display:flex;gap:6px;flex-wrap:wrap}
+.inv-btn{font-family:var(--display);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;border:1px solid;cursor:pointer;transition:all .15s;background:none}
+.inv-btn-equip{color:var(--gold);border-color:rgba(184,134,11,0.3)}.inv-btn-equip:hover{background:var(--gold-dim)}
+.inv-btn-sell{color:var(--ink3);border-color:rgba(107,78,42,0.3)}.inv-btn-sell:hover{border-color:var(--ink3);color:var(--parchment3)}
+.inv-btn-salvage{color:var(--crimson);border-color:rgba(139,26,26,0.3)}.inv-btn-salvage:hover{background:rgba(139,26,26,0.1)}
+.inv-empty{text-align:center;padding:60px 20px;color:var(--ink3);font-style:italic;font-size:15px}
+.companion-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.companion-card{background:rgba(244,237,224,0.03);border:1px solid rgba(184,134,11,0.12);padding:18px;transition:border .2s}
+.companion-card:hover{border-color:rgba(184,134,11,0.3)}
+.companion-card.owned{border-color:rgba(184,134,11,0.25)}
+.companion-card.active-companion{border-color:var(--gold)}
+.cc-name{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--parchment);margin-bottom:4px}
+.cc-desc{font-size:13px;color:var(--ink3);font-style:italic;margin-bottom:12px;line-height:1.5}
+.cc-attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.cc-attr{text-align:center;background:rgba(26,16,8,0.6);border:1px solid rgba(184,134,11,0.1);padding:6px 4px}
+.cc-attr-label{font-family:var(--display);font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px}
+.cc-attr-val{font-family:var(--display);font-size:14px;font-weight:700;color:var(--gold)}
+.cc-actions{display:flex;gap:6px;flex-wrap:wrap}
+.cc-btn{font-family:var(--display);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border:1px solid;cursor:pointer;transition:all .2s;background:none}
+.cc-btn-buy{color:var(--gold);border-color:rgba(184,134,11,0.4)}.cc-btn-buy:hover{background:var(--gold-dim)}
+.cc-btn-activate{color:var(--parchment3);border-color:rgba(244,237,224,0.2)}.cc-btn-activate:hover{border-color:var(--parchment3)}
+.cc-btn-dismiss{color:var(--crimson);border-color:rgba(139,26,26,0.3)}.cc-btn-dismiss:hover{background:rgba(139,26,26,0.1)}
+.cc-btn-active{color:var(--ink);background:var(--gold);border-color:var(--gold)}
+.cc-level{font-family:var(--display);font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:8px}
+.loot-modal-bg{position:fixed;inset:0;background:rgba(10,6,3,0.88);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.loot-modal-bg.show{opacity:1;pointer-events:all}
+.loot-modal{background:var(--parchment2);border:1px solid var(--gold);max-width:540px;width:92%;padding:24px}
+.loot-modal-title{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--ink);margin-bottom:18px;text-align:center}
+.loot-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:start;margin-bottom:16px}
+.loot-col-title{font-family:var(--display);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.loot-item-name{font-family:var(--display);font-size:12px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.loot-item-rarity{font-family:var(--display);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.loot-stat{font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--parchment3)}
+.loot-stat-better{color:var(--crimson)}.loot-stat-worse{color:var(--ink3)}
+.loot-vs{font-family:var(--display);font-size:16px;color:var(--ink3);font-weight:700;text-align:center;padding-top:20px}
+.loot-values{display:flex;justify-content:center;gap:20px;margin-bottom:16px;padding:10px;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.15)}
+.loot-value-item{text-align:center}
+.loot-value-label{font-family:var(--display);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.loot-value-num{font-family:var(--display);font-size:15px;font-weight:700;color:var(--gold)}
+.loot-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.loot-action-btn{font-family:var(--display);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:10px 4px;border:1px solid;cursor:pointer;transition:all .2s;background:none;text-align:center}
+.loot-action-btn.equip{color:var(--ink);background:var(--gold);border-color:var(--gold)}.loot-action-btn.equip:hover{background:var(--gold2)}
+.loot-action-btn.store{color:var(--ink);border-color:var(--ink2)}.loot-action-btn.store:hover{background:var(--parchment3)}
+.loot-action-btn.sell{color:var(--ink3);border-color:rgba(107,78,42,0.4)}.loot-action-btn.sell:hover{border-color:var(--ink3);color:var(--ink)}
+.loot-action-btn.salvage{color:var(--crimson);border-color:rgba(139,26,26,0.3)}.loot-action-btn.salvage:hover{background:rgba(139,26,26,0.08)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--parchment2);border:1px solid var(--gold);color:var(--ink);padding:12px 24px;font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;z-index:200;opacity:0;transition:all .3s;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(184,134,11,0.15)}
+.panel-title{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--parchment3)}
+.panel-sub{font-size:12px;color:var(--ink3);font-style:italic}
 </style>
 </head>
 <body>
-
-<!-- INTRO -->
 <div class="screen active" id="screen-intro">
   <div class="intro-bg"></div>
-  <div class="intro-runes">ᚠᚢᚦᚨᚱᚲ</div>
+  <div class="intro-runes">&#x16A0;&#x16A2;&#x16A6;&#x16A8;&#x16B1;&#x16B2;</div>
   <div class="intro-content">
-    <div class="intro-emblem">⬡</div>
+    <div class="intro-emblem">&#x2B21;</div>
     <div class="intro-title">Forge</div>
     <div class="intro-subtitle">Your Legend Awaits</div>
     <button class="intro-btn" onclick="showScreen('screen-settings')">Begin</button>
   </div>
-  <div class="corner corner-tl"></div>
-  <div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div>
-  <div class="corner corner-br"></div>
+  <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div><div class="corner corner-br"></div>
 </div>
-
-<!-- SETTING SELECT -->
 <div class="screen" id="screen-settings">
   <div style="width:100%;max-width:960px;padding:0 20px">
     <div class="settings-header">
@@ -167,35 +258,145 @@ body{display:flex;align-items:center;justify-content:center;font-family:var(--bo
     <div class="settings-grid" id="settings-grid"></div>
   </div>
 </div>
-
-<!-- QUESTION -->
-<div class="screen" id="screen-question">
-  <div class="question-wrap" id="question-wrap"></div>
-</div>
-
-<!-- TIE RESOLUTION -->
-<div class="screen" id="screen-tie">
-  <div class="tie-wrap" id="tie-wrap"></div>
-</div>
-
-<!-- REVEAL -->
+<div class="screen" id="screen-question"><div class="question-wrap" id="question-wrap"></div></div>
+<div class="screen" id="screen-tie"><div class="tie-wrap" id="tie-wrap"></div></div>
 <div class="screen" id="screen-reveal">
   <div class="reveal-bg"></div>
   <div class="reveal-wrap" id="reveal-wrap"></div>
-  <div class="corner corner-tl"></div>
-  <div class="corner corner-tr"></div>
-  <div class="corner corner-bl"></div>
-  <div class="corner corner-br"></div>
+  <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div><div class="corner corner-br"></div>
 </div>
-
+<div class="screen" id="screen-game">
+  <div class="game-topbar">
+    <div class="game-logo">&#x2B21; Forge</div>
+    <div class="game-char-name" id="topbar-char-name"></div>
+    <div class="game-economy">
+      <div class="economy-item"><span>&#x26A1;</span><span>Essence</span><span class="economy-val" id="eco-essence">0</span></div>
+      <div class="economy-item"><span>&#x25C6;</span><span>Shards</span><span class="economy-val" id="eco-shards">0</span></div>
+      <div class="economy-item"><span>&#x1FA99;</span><span id="eco-currency-label">Gold</span><span class="economy-val" id="eco-currency">0</span></div>
+      <div class="economy-item"><span>&#x2726;</span><span>Frags</span><span class="economy-val" id="eco-fragments">0</span></div>
+      <div class="economy-item"><span>&#x2694;&#xFE0F;</span><span>Lv</span><span class="economy-val" id="eco-level">1</span></div>
+    </div>
+  </div>
+  <div class="game-nav">
+    <div class="game-tab active" id="tab-combat" onclick="showGamePanel('combat')">Combat</div>
+    <div class="game-tab" id="tab-character" onclick="showGamePanel('character')">Character</div>
+    <div class="game-tab" id="tab-inventory" onclick="showGamePanel('inventory')">Inventory</div>
+    <div class="game-tab" id="tab-companions" onclick="showGamePanel('companions')">Companions</div>
+  </div>
+  <div class="game-body">
+    <div class="game-panel active" id="panel-combat">
+      <div class="combat-layout">
+        <div class="combat-main">
+          <div class="combat-stage">
+            <div class="vs-row">
+              <div class="combatant-block player-block">
+                <div class="cb-name gold" id="cb-player-name">You</div>
+                <div class="cb-bar-label"><span>VITALITY</span><span id="cb-player-vit-text">-</span></div>
+                <div class="cb-bar-track"><div class="cb-bar-fill vit high" id="cb-player-vit-bar" style="width:100%"></div></div>
+                <div class="cb-bar-label"><span style="color:#4499ff">FOCUS</span><span id="cb-player-foc-text" style="color:#4499ff">-</span></div>
+                <div class="cb-bar-track"><div class="cb-bar-fill foc" id="cb-player-foc-bar" style="width:100%"></div></div>
+                <div class="cb-mini">
+                  <div class="cb-mini-stat"><div class="cb-mini-label">PWR</div><div class="cb-mini-val" id="cb-player-pwr">-</div></div>
+                  <div class="cb-mini-stat"><div class="cb-mini-label">EVD</div><div class="cb-mini-val" id="cb-player-evd">-</div></div>
+                  <div class="cb-mini-stat"><div class="cb-mini-label">BLK</div><div class="cb-mini-val" id="cb-player-blk">-</div></div>
+                </div>
+              </div>
+              <div class="vs-emblem">VS</div>
+              <div class="combatant-block enemy-block">
+                <div class="cb-name crimson" id="cb-enemy-name">-</div>
+                <div class="cb-bar-label"><span>VITALITY</span><span id="cb-enemy-vit-text">-</span></div>
+                <div class="cb-bar-track"><div class="cb-bar-fill vit" id="cb-enemy-vit-bar" style="width:100%"></div></div>
+                <div class="cb-bar-label"><span style="color:#4499ff">FOCUS</span><span id="cb-enemy-foc-text" style="color:#4499ff">-</span></div>
+                <div class="cb-bar-track"><div class="cb-bar-fill foc" id="cb-enemy-foc-bar" style="width:100%"></div></div>
+                <div class="cb-mini">
+                  <div class="cb-mini-stat"><div class="cb-mini-label">PWR</div><div class="cb-mini-val" id="cb-enemy-pwr">-</div></div>
+                  <div class="cb-mini-stat"><div class="cb-mini-label">EVD</div><div class="cb-mini-val" id="cb-enemy-evd">-</div></div>
+                  <div class="cb-mini-stat"><div class="cb-mini-label">BLK</div><div class="cb-mini-val" id="cb-enemy-blk">-</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="companion-strip" id="companion-strip">
+              <span class="companion-strip-label">Companion</span>
+              <span class="companion-strip-empty">No companion active</span>
+            </div>
+          </div>
+          <div class="combat-log">
+            <div class="log-header"><span>Combat Chronicle</span><button class="log-clear" onclick="clearLog()">clear</button></div>
+            <div class="log-entries" id="log-entries"></div>
+          </div>
+        </div>
+        <div class="combat-sidebar">
+          <div class="sidebar-section">
+            <div class="ss-title">Combat Stats</div>
+            <div class="stat-row"><span class="stat-name">Vitality</span><span class="stat-val gold" id="cs-vit">-</span></div>
+            <div class="stat-row"><span class="stat-name">Focus</span><span class="stat-val" id="cs-foc">-</span></div>
+            <div class="stat-row"><span class="stat-name">Power</span><span class="stat-val" id="cs-pwr">-</span></div>
+            <div class="stat-row"><span class="stat-name">Evade</span><span class="stat-val" id="cs-evd">-</span></div>
+            <div class="stat-row"><span class="stat-name">Block</span><span class="stat-val" id="cs-blk">-</span></div>
+            <div class="stat-row"><span class="stat-name">Soak</span><span class="stat-val" id="cs-sok">-</span></div>
+          </div>
+          <div class="sidebar-section">
+            <div class="ss-title">Equipment</div>
+            <div id="sidebar-equipment"></div>
+          </div>
+          <div class="sidebar-section">
+            <div class="ss-title">Skills</div>
+            <div id="sidebar-skills" style="font-size:11px;color:var(--ink3);font-style:italic">No skills acquired</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="game-panel" id="panel-character">
+      <div style="max-width:700px;margin:0 auto">
+        <div class="panel-header">
+          <div class="panel-title" id="char-panel-title">Character</div>
+          <div class="panel-sub" id="char-panel-sub"></div>
+        </div>
+        <div id="char-panel-body"></div>
+      </div>
+    </div>
+    <div class="game-panel" id="panel-inventory">
+      <div class="panel-header"><div class="panel-title">Inventory</div><div class="panel-sub" id="inv-count">0 items</div></div>
+      <div class="inv-grid" id="inv-grid"></div>
+    </div>
+    <div class="game-panel" id="panel-companions">
+      <div class="panel-header"><div class="panel-title">Companions</div><div class="panel-sub" id="comp-currency-display"></div></div>
+      <div class="companion-grid" id="companion-grid"></div>
+    </div>
+  </div>
+</div>
+<div class="loot-modal-bg" id="loot-modal">
+  <div class="loot-modal">
+    <div class="loot-modal-title">&#x2694; Loot Acquired</div>
+    <div class="loot-compare" id="loot-compare"></div>
+    <div class="loot-values" id="loot-values"></div>
+    <div class="loot-actions" id="loot-actions"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 <script>
-// ── DATA ──
+
+// ═══════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════
+const BASE_FREQUENCY = 0.5;
+const DROP_CHANCE_OVERKILL = 1.5;
+const SHARD_FRAGMENT_CONVERSION = 10000;
+const RARITY_MULTIPLIER = {common:0.8,uncommon:1.0,rare:1.5,legendary:3.0,epic:5.0};
+const RARITY_ORDER = ['common','uncommon','rare','legendary','epic'];
+const COMBAT_TICK_MS = 1800;
+const SLOT_LABELS = {head:'Head',chest:'Chest',back:'Back',hands:'Hands',right_weapon:'R.Weapon',right_ring:'R.Ring',left_weapon:'L.Weapon',left_ring:'L.Ring',legs:'Legs',feet:'Feet'};
+const SLOTS = Object.keys(SLOT_LABELS);
+
+// ═══════════════════════════════════════════
+// SETTING DATA
+// ═══════════════════════════════════════════
 const SETTINGS = [
   {
     id:'fantasy',
-    meta:{name:'Sword & Sorcery',description:'Ancient magic stirs. Kingdoms rise and fall by blade and spell. Your bloodline may decide the fate of the realm.',author:'official',locked:false},
-    icon:'⚔️',
-    tags:['Warriors','Magic','Kingdoms'],
+    meta:{name:'Sword & Sorcery',description:'Ancient magic stirs. Kingdoms rise and fall by blade and spell.',author:'official',locked:false,currency_name:'Gold'},
+    icon:'⚔️',tags:['Warriors','Magic','Kingdoms'],
     classes:[
       {id:'warrior',name:'Warrior',description:'Masters of physical combat and battlefield tactics.',attribute_contribution:{physical:8,mental:3,supernatural:1}},
       {id:'mage',name:'Mage',description:'Wielders of arcane power and ancient knowledge.',attribute_contribution:{physical:2,mental:5,supernatural:8}},
@@ -207,16 +408,48 @@ const SETTINGS = [
       {id:'dwarf',name:'Dwarf',description:'Stout and stubborn, dwarves endure where others fall.',attribute_contribution:{physical:6,mental:3,supernatural:1}}
     ],
     flavors:{
-      warrior_human:"You move like a force of nature — where others hesitate, you act. The battlefield is your home and your body is your weapon.",
-      warrior_elf:"Beneath your elegance lies iron resolve. You fight with a grace that deceives your enemies until it is far too late.",
-      warrior_dwarf:"You are unmovable. Your ancestors carved mountains with their bare hands, and their stubborn blood runs hot in your veins.",
-      mage_human:"Your hunger for knowledge is matched only by your adaptability. You bend every discipline to your will.",
-      mage_elf:"Magic is not something you learned — it is something you remembered. The arcane feels like a mother tongue.",
-      mage_dwarf:"Where others see mysticism, you see engineering. Your magic is precise, methodical, and terrifyingly effective.",
-      rogue_human:"You read people like open books. Every room you enter has three exits — you found them before you sat down.",
-      rogue_elf:"You move through the world like smoke. Patient, silent, present only when you choose to be.",
-      rogue_dwarf:"You are the one they never see coming. Nobody suspects the dwarf. That is exactly how you like it."
+      warrior:{human:"You move like a force of nature. The battlefield is your home and your body is your weapon.",elf:"Beneath your elegance lies iron resolve. You fight with a grace that deceives your enemies until it is far too late.",dwarf:"You are unmovable. Your ancestors carved mountains with their bare hands, and their stubborn blood runs hot in your veins."},
+      mage:{human:"Your hunger for knowledge is matched only by your adaptability. You bend every discipline to your will.",elf:"Magic is not something you learned — it is something you remembered. The arcane feels like a mother tongue.",dwarf:"Where others see mysticism, you see engineering. Your magic is precise, methodical, and terrifyingly effective."},
+      rogue:{human:"You read people like open books. Every room you enter has three exits — you found them before you sat down.",elf:"You move through the world like smoke. Patient, silent, present only when you choose to be.",dwarf:"You are the one they never see coming. Nobody suspects the dwarf. That is exactly how you like it."}
     },
+    tutorial:{enemy_id:'frightened_peasant',guaranteed_win:true,guaranteed_drop:true,drop_item_id:'iron_helm',drop_rarity:'uncommon',intro_text:'Your legend begins with a single step into danger. The road ahead is long.'},
+    skills:[
+      {id:'shield_bash',name:'Shield Bash',class_id:'warrior',description:'A brutal strike that staggers the enemy.',cost:8,modifiers:{self:{power_pct:0.4},enemy:{}}},
+      {id:'arcane_bolt',name:'Arcane Bolt',class_id:'mage',description:'Raw magical force erupts from your hands.',cost:12,modifiers:{self:{power_pct:0.6},enemy:{}}},
+      {id:'shadow_step',name:'Shadow Step',class_id:'rogue',description:'You slip between moments, untouchable.',cost:10,modifiers:{self:{evade_flat:50},enemy:{}}},
+      {id:'battle_cry',name:'Battle Cry',class_id:'warrior',description:"Your voice breaks their resolve.",cost:6,modifiers:{self:{},enemy:{block_pct:-0.3}}},
+      {id:'iron_stance',name:'Iron Stance',class_id:'warrior',description:'You root yourself like an ancient oak.',cost:5,modifiers:{self:{block_pct:0.5},enemy:{}}},
+      {id:'arcane_shield',name:'Arcane Shield',class_id:'mage',description:'A shell of pure force surrounds you.',cost:14,modifiers:{self:{soak_flat:25},enemy:{}}}
+    ],
+    gear:[
+      {id:'iron_helm',slot:'head',name:'Iron Helm',description:'Simple but effective.',min_level:1,disposition:{base_value:8,base_salvage:3},modifiers:{physical:2,mental:0,supernatural:0}},
+      {id:'leather_vest',slot:'chest',name:'Leather Vest',description:'Worn but reliable.',min_level:1,disposition:{base_value:6,base_salvage:2},modifiers:{physical:2,mental:0,supernatural:0}},
+      {id:'wool_cloak',slot:'back',name:'Wool Cloak',description:'Keeps the chill out.',min_level:1,disposition:{base_value:4,base_salvage:1},modifiers:{physical:0,mental:1,supernatural:0}},
+      {id:'iron_sword',slot:'right_weapon',name:'Iron Sword',description:'Reliable in any fight.',min_level:1,disposition:{base_value:12,base_salvage:5},modifiers:{physical:3,mental:0,supernatural:0}},
+      {id:'wooden_shield',slot:'left_weapon',name:'Wooden Shield',description:'Better than nothing.',min_level:1,disposition:{base_value:7,base_salvage:2},modifiers:{physical:2,mental:0,supernatural:0}},
+      {id:'work_gloves',slot:'hands',name:'Work Gloves',description:'Worn smooth from use.',min_level:1,disposition:{base_value:3,base_salvage:1},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'rough_trousers',slot:'legs',name:'Rough Trousers',description:'Sturdy enough.',min_level:1,disposition:{base_value:4,base_salvage:1},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'worn_boots',slot:'feet',name:'Worn Boots',description:'They have seen better days.',min_level:1,disposition:{base_value:4,base_salvage:1},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'mages_circlet',slot:'head',name:"Mage's Circlet",description:'Hums with latent power.',min_level:3,disposition:{base_value:20,base_salvage:8},modifiers:{physical:0,mental:4,supernatural:2}},
+      {id:'arcane_robe',slot:'chest',name:'Arcane Robe',description:'Woven with spell-thread.',min_level:3,disposition:{base_value:18,base_salvage:7},modifiers:{physical:0,mental:3,supernatural:4}},
+      {id:'shadow_cloak',slot:'back',name:'Shadow Cloak',description:'Harder to see in the dark.',min_level:3,disposition:{base_value:16,base_salvage:6},modifiers:{physical:0,mental:2,supernatural:2}},
+      {id:'silver_dagger',slot:'right_weapon',name:'Silver Dagger',description:'Kills things that should not die.',min_level:3,disposition:{base_value:22,base_salvage:9},modifiers:{physical:2,mental:0,supernatural:2}},
+      {id:'staff_embers',slot:'right_weapon',name:'Staff of Embers',description:'Still warm to the touch.',min_level:5,disposition:{base_value:35,base_salvage:14},modifiers:{physical:0,mental:3,supernatural:4}},
+      {id:'dragonscale',slot:'chest',name:'Dragonscale Plate',description:'From something that no longer breathes.',min_level:8,disposition:{base_value:60,base_salvage:25},modifiers:{physical:6,mental:0,supernatural:4}},
+      {id:'excalibrant',slot:'right_weapon',name:'Excalibrant',description:'It chose you. Whether you deserved it is another matter.',min_level:10,disposition:{base_value:100,base_salvage:40},modifiers:{physical:5,mental:3,supernatural:2}}
+    ],
+    enemies:[
+      {id:'frightened_peasant',name:'Frightened Peasant',description:'They did not ask to be here.',attributes:{physical:3,mental:2,supernatural:0},loot:{frequency:0.01,min_value:0,max_value:5,min_salvage:0,max_salvage:2,min_rarity:'common',max_rarity:'uncommon'}},
+      {id:'goblin',name:'Goblin',description:'Small, vicious, and surprisingly cunning.',attributes:{physical:4,mental:2,supernatural:1},loot:{frequency:0.04,min_value:2,max_value:10,min_salvage:1,max_salvage:4,min_rarity:'common',max_rarity:'rare'}},
+      {id:'orc',name:'Orc',description:'Built like a wall. Fights like one too.',attributes:{physical:8,mental:2,supernatural:2},loot:{frequency:0.06,min_value:5,max_value:20,min_salvage:2,max_salvage:8,min_rarity:'uncommon',max_rarity:'rare'}},
+      {id:'skeleton',name:'Skeleton',description:'It should not be moving.',attributes:{physical:5,mental:1,supernatural:4},loot:{frequency:0.05,min_value:4,max_value:18,min_salvage:2,max_salvage:7,min_rarity:'common',max_rarity:'rare'}},
+      {id:'dragon',name:'Dragon',description:'Ancient. Vast. Utterly indifferent to your survival.',attributes:{physical:14,mental:6,supernatural:10},loot:{frequency:0.15,min_value:30,max_value:120,min_salvage:12,max_salvage:50,min_rarity:'rare',max_rarity:'legendary'}}
+    ],
+    companions:[
+      {id:'war_hound',name:'War Hound',description:'Loyal to a fault. Ferocious in battle.',cost:40,upgrade_cost_base:15,attributes:{physical:8,mental:2,supernatural:1},skill_id:'shield_bash'},
+      {id:'familiar',name:'Arcane Familiar',description:'A creature of pure magical energy that mirrors your intent.',cost:80,upgrade_cost_base:30,attributes:{physical:2,mental:6,supernatural:8},skill_id:'arcane_bolt'},
+      {id:'shadow_twin',name:'Shadow Twin',description:'A fragment of your own shadow given terrible life.',cost:120,upgrade_cost_base:45,attributes:{physical:5,mental:7,supernatural:6},skill_id:'shadow_step'}
+    ],
     questions:[
       {id:'q1',axis:'both',prompt:'A stranger collapses before you clutching a stolen artifact. What do you do?',answers:[
         {id:'a1',text:'Rush to their aid immediately.',weights:{class:{warrior:3,mage:1,rogue:2},species:{human:4,elf:2,dwarf:1}}},
@@ -271,20 +504,13 @@ const SETTINGS = [
     ]
   },
   {
-    id:'scifi',
-    meta:{name:'Sci-Fi',description:'The galaxy is vast, indifferent, and dangerous. Corporations rule, stars are conquered, and your DNA may be your destiny.',author:'official',locked:true},
-    icon:'🚀',
-    tags:['Cybernetics','Starships','Factions']
-  },
-  {
     id:'horror',
-    meta:{name:'Horror',description:'Something ancient stirs in the dark. Sanity is fragile, monsters are real, and survival is never guaranteed.',author:'official',locked:false},
-    icon:'🕯️',
-    tags:['Survival','Monsters','Dread'],
+    meta:{name:'Horror',description:'Something ancient stirs in the dark. Sanity is fragile. Monsters are real.',author:'official',locked:false,currency_name:'Dread Coin'},
+    icon:'🕯️',tags:['Survival','Monsters','Dread'],
     classes:[
-      {id:'stalker',name:'Stalker',description:'Patient predators who hunt from shadow. They win before the fight begins.',attribute_contribution:{physical:2,mental:6,supernatural:4}},
-      {id:'brawler',name:'Brawler',description:'Raw aggression incarnate. They take the hit and keep coming.',attribute_contribution:{physical:8,mental:2,supernatural:2}},
-      {id:'tank',name:'Tank',description:'Immovable. Unbreakable. They stand between the dark and everything worth protecting.',attribute_contribution:{physical:6,mental:2,supernatural:5}}
+      {id:'stalker',name:'Stalker',description:'Patient predators who hunt from shadow and silence.',attribute_contribution:{physical:2,mental:6,supernatural:4}},
+      {id:'brawler',name:'Brawler',description:'Raw aggression incarnate. They hit first and think never.',attribute_contribution:{physical:8,mental:2,supernatural:2}},
+      {id:'tank',name:'Tank',description:'Immovable. Unbreakable. A wall that bleeds.',attribute_contribution:{physical:6,mental:2,supernatural:5}}
     ],
     species:[
       {id:'vampire',name:'Vampire',description:'Predatory elegance wrapped in centuries of cunning.',attribute_contribution:{physical:2,mental:5,supernatural:7}},
@@ -292,320 +518,962 @@ const SETTINGS = [
       {id:'zombie',name:'Zombie',description:'They should be dead. They keep moving anyway.',attribute_contribution:{physical:5,mental:1,supernatural:8}}
     ],
     flavors:{
-      stalker_vampire:"You are the nightmare they cannot name. Ancient, patient, and lethal — you have hunted longer than most civilizations have existed. By the time they know you are there, it is already over.",
-      stalker_werewolf:"You hunt in silence until the moment you do not. The beast inside you is not a weakness — it is the most terrifying thing in the room, and you decide exactly when it arrives.",
-      stalker_zombie:"You do not need to be fast. You do not need to be clever. You only need to keep moving, and you will never stop. The truly horrifying thing about you is that you know this.",
-      brawler_vampire:"Centuries of strength with none of the restraint. You hit like something that was never human and has long since stopped pretending otherwise.",
-      brawler_werewolf:"You are what the dark is afraid of. Pure, unrelenting physical force wrapped in instinct and fury. You have never met a problem that more violence did not solve.",
-      brawler_zombie:"You absorbed more punishment than any living thing should survive, and you are still standing. Still swinging. Still moving forward. You always move forward.",
-      tank_vampire:"You have outlasted empires. Whatever comes through that door has never faced something that simply refuses to end. You are the reason monsters check over their shoulder.",
-      tank_werewolf:"Your body is a fortress. Your instincts are a weapon. You stand at the threshold between your people and the dark, and nothing has ever made it past you yet.",
-      tank_zombie:"You cannot be stopped. You cannot be reasoned with. You cannot be broken. Whatever you are protecting, you will be standing in front of it long after everything else has fallen."
+      stalker:{vampire:"You are the nightmare they cannot name. Ancient, patient, and absolutely lethal.",werewolf:"You hunt in silence until the moment you do not.",zombie:"You do not need to be fast. You only need to keep moving."},
+      brawler:{vampire:"Centuries of strength with none of the restraint.",werewolf:"You are what the dark is afraid of.",zombie:"You absorbed more punishment than anything should survive."},
+      tank:{vampire:"You have outlasted empires. You will outlast this too.",werewolf:"Your body is a fortress. Your instincts are a weapon.",zombie:"You cannot be stopped. You cannot be reasoned with. You endure."}
     },
+    tutorial:{enemy_id:'frightened_villager',guaranteed_win:true,guaranteed_drop:true,drop_item_id:'cracked_mask',drop_rarity:'uncommon',intro_text:'Something stirs in the darkness. Your first trial begins now.'},
+    skills:[
+      {id:'predatory_strike',name:'Predatory Strike',class_id:'stalker',description:'You hit where it hurts most.',cost:8,modifiers:{self:{power_pct:0.5},enemy:{}}},
+      {id:'blood_frenzy',name:'Blood Frenzy',class_id:'brawler',description:'Reckless and devastating.',cost:10,modifiers:{self:{power_pct:0.35,block_pct:-0.2},enemy:{}}},
+      {id:'dead_weight',name:'Dead Weight',class_id:'tank',description:'You simply absorb it.',cost:6,modifiers:{self:{soak_flat:30},enemy:{}}},
+      {id:'vanish',name:'Vanish',class_id:'stalker',description:'You are not there when the blow lands.',cost:12,modifiers:{self:{evade_flat:60},enemy:{}}},
+      {id:'death_rattle',name:'Death Rattle',class_id:'tank',description:"Something in your presence breaks their nerve.",cost:5,modifiers:{self:{},enemy:{power_pct:-0.25}}},
+      {id:'pack_instinct',name:'Pack Instinct',class_id:'brawler',description:'Every sense sharpens to a point.',cost:8,modifiers:{self:{block_pct:0.4,evade_flat:20},enemy:{}}}
+    ],
+    gear:[
+      {id:'cracked_mask',slot:'head',name:'Cracked Mask',description:'Better than nothing.',min_level:1,disposition:{base_value:5,base_salvage:2},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'torn_jacket',slot:'chest',name:'Torn Jacket',description:'Still provides some protection.',min_level:1,disposition:{base_value:4,base_salvage:1},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'tattered_cape',slot:'back',name:'Tattered Cape',description:'Fraying at every edge.',min_level:1,disposition:{base_value:3,base_salvage:1},modifiers:{physical:0,mental:1,supernatural:0}},
+      {id:'rusty_knife',slot:'right_weapon',name:'Rusty Knife',description:'Tetanus included at no extra charge.',min_level:1,disposition:{base_value:8,base_salvage:3},modifiers:{physical:2,mental:0,supernatural:0}},
+      {id:'trash_lid',slot:'left_weapon',name:'Trash Lid Shield',description:'Surprisingly effective.',min_level:1,disposition:{base_value:5,base_salvage:2},modifiers:{physical:2,mental:0,supernatural:0}},
+      {id:'rubber_gloves',slot:'hands',name:'Rubber Gloves',description:'Insulating, if nothing else.',min_level:1,disposition:{base_value:3,base_salvage:1},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'torn_jeans',slot:'legs',name:'Torn Jeans',description:'They have seen better days.',min_level:1,disposition:{base_value:3,base_salvage:1},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'cracked_sneakers',slot:'feet',name:'Cracked Sneakers',description:'At least they are comfortable.',min_level:1,disposition:{base_value:3,base_salvage:1},modifiers:{physical:1,mental:0,supernatural:0}},
+      {id:'gas_mask',slot:'head',name:'Gas Mask',description:'Keeps the worst out.',min_level:3,disposition:{base_value:14,base_salvage:5},modifiers:{physical:2,mental:1,supernatural:0}},
+      {id:'kevlar',slot:'chest',name:'Kevlar Vest',description:'Stops bullets. Mostly.',min_level:3,disposition:{base_value:18,base_salvage:7},modifiers:{physical:4,mental:0,supernatural:0}},
+      {id:'hunting_rifle',slot:'right_weapon',name:'Hunting Rifle',description:'Range is survival.',min_level:3,disposition:{base_value:20,base_salvage:8},modifiers:{physical:3,mental:1,supernatural:0}},
+      {id:'occultist_hood',slot:'head',name:"Occultist's Hood",description:'Marked with symbols you cannot read.',min_level:5,disposition:{base_value:28,base_salvage:11},modifiers:{physical:0,mental:4,supernatural:3}},
+      {id:'ritual_coat',slot:'chest',name:'Ritual Coat',description:'Still warm from its last owner.',min_level:5,disposition:{base_value:25,base_salvage:10},modifiers:{physical:0,mental:2,supernatural:5}},
+      {id:'bone_cleaver',slot:'right_weapon',name:'Bone Cleaver',description:'Something was broken to make this.',min_level:5,disposition:{base_value:32,base_salvage:13},modifiers:{physical:5,mental:0,supernatural:2}},
+      {id:'hollow_crown',slot:'head',name:'The Hollow Crown',description:'It whispers. You have learned not to listen.',min_level:10,disposition:{base_value:90,base_salvage:36},modifiers:{physical:0,mental:5,supernatural:6}}
+    ],
+    enemies:[
+      {id:'frightened_villager',name:'Frightened Villager',description:'They did not ask to be here. Neither did you.',attributes:{physical:3,mental:2,supernatural:0},loot:{frequency:0.01,min_value:0,max_value:4,min_salvage:0,max_salvage:1,min_rarity:'common',max_rarity:'uncommon'}},
+      {id:'cultist',name:'Cultist',description:'Hollow-eyed and devoted to something terrible.',attributes:{physical:3,mental:4,supernatural:2},loot:{frequency:0.02,min_value:0,max_value:5,min_salvage:0,max_salvage:3,min_rarity:'common',max_rarity:'rare'}},
+      {id:'ghoul',name:'Ghoul',description:'It moves wrong. It always moves wrong.',attributes:{physical:7,mental:2,supernatural:5},loot:{frequency:0.05,min_value:4,max_value:16,min_salvage:2,max_salvage:6,min_rarity:'common',max_rarity:'rare'}},
+      {id:'wendigo',name:'Wendigo',description:'Hunger given form. Ancient, endless hunger.',attributes:{physical:10,mental:3,supernatural:7},loot:{frequency:0.08,min_value:10,max_value:30,min_salvage:4,max_salvage:12,min_rarity:'uncommon',max_rarity:'legendary'}},
+      {id:'elder_thing',name:'Elder Thing',description:'It predates language. It predates thought.',attributes:{physical:8,mental:10,supernatural:12},loot:{frequency:0.12,min_value:25,max_value:90,min_salvage:10,max_salvage:36,min_rarity:'rare',max_rarity:'legendary'}}
+    ],
+    companions:[
+      {id:'shadow_cat',name:'Shadow Cat',description:'A creature of pure darkness that hunts beside you in silence.',cost:50,upgrade_cost_base:20,attributes:{physical:4,mental:6,supernatural:8},skill_id:'vanish'},
+      {id:'bound_spirit',name:'Bound Spirit',description:'Something you should not have summoned. Something that stays anyway.',cost:90,upgrade_cost_base:35,attributes:{physical:2,mental:8,supernatural:10},skill_id:'death_rattle'},
+      {id:'dire_wolf',name:'Dire Wolf',description:'The last of its kind. It chose you. You are not sure why.',cost:70,upgrade_cost_base:28,attributes:{physical:9,mental:3,supernatural:2},skill_id:'blood_frenzy'}
+    ],
     questions:[
-      {id:'q1',axis:'both',prompt:'You hear something moving in the walls of the house. It has been there for three nights. Tonight it sounds closer. What do you do?',answers:[
-        {id:'a1',text:'Cut the power and wait for it in the dark. On your terms.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:4,werewolf:2,zombie:1}}},
-        {id:'a2',text:'Find it. Flush it out. End it.',weights:{class:{stalker:1,brawler:5,tank:2},species:{vampire:1,werewolf:5,zombie:2}}},
-        {id:'a3',text:'Barricade the room and make sure whatever it is cannot reach the others.',weights:{class:{stalker:1,brawler:2,tank:5},species:{vampire:2,werewolf:2,zombie:4}}}
+      {id:'q1',axis:'both',prompt:'You hear a scream from the building next door at 3am. You:',answers:[
+        {id:'a1',text:'Grab whatever is nearby and go immediately.',weights:{class:{stalker:1,brawler:5,tank:3},species:{vampire:1,werewolf:4,zombie:2}}},
+        {id:'a2',text:'Watch from the window first to assess the threat.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:4,werewolf:1,zombie:2}}},
+        {id:'a3',text:'You already know. You heard the footsteps an hour ago.',weights:{class:{stalker:4,brawler:2,tank:3},species:{vampire:5,werewolf:2,zombie:1}}}
       ]},
-      {id:'q2',axis:'class',prompt:'The creature is faster than you expected. You are cornered. How do you survive?',answers:[
-        {id:'a1',text:'You were never cornered. This was the plan.',weights:{class:{stalker:5,brawler:0,tank:1},species:{vampire:4,werewolf:1,zombie:2}}},
-        {id:'a2',text:'You hit it harder than it thought possible and you do not stop.',weights:{class:{stalker:0,brawler:5,tank:2},species:{vampire:1,werewolf:5,zombie:3}}},
-        {id:'a3',text:'You absorb the blow, stay on your feet, and give the others time to run.',weights:{class:{stalker:1,brawler:2,tank:5},species:{vampire:2,werewolf:3,zombie:4}}}
+      {id:'q2',axis:'class',prompt:'A monster has you cornered. You:',answers:[
+        {id:'a1',text:'Charge it. Take the hit, keep moving.',weights:{class:{stalker:1,brawler:5,tank:3},species:{vampire:1,werewolf:5,zombie:3}}},
+        {id:'a2',text:'Hold your ground and let it come to you.',weights:{class:{stalker:2,brawler:2,tank:5},species:{vampire:2,werewolf:2,zombie:5}}},
+        {id:'a3',text:'Wait for the moment it overcommits, then punish it.',weights:{class:{stalker:5,brawler:2,tank:1},species:{vampire:5,werewolf:2,zombie:1}}}
       ]},
-      {id:'q3',axis:'species',prompt:'You wake and something is wrong with your reflection. What unsettles you most?',answers:[
-        {id:'a1',text:'Your eyes. They are not the colour they were.',weights:{class:{stalker:3,brawler:1,tank:2},species:{vampire:5,werewolf:1,zombie:2}}},
-        {id:'a2',text:'The way your hands look. Too large. Too ready.',weights:{class:{stalker:1,brawler:4,tank:3},species:{vampire:1,werewolf:5,zombie:2}}},
-        {id:'a3',text:'The fact that you feel nothing looking at it.',weights:{class:{stalker:2,brawler:2,tank:3},species:{vampire:2,werewolf:2,zombie:5}}}
+      {id:'q3',axis:'species',prompt:'What do you actually fear?',answers:[
+        {id:'a1',text:'Losing yourself. Becoming something that no longer recognizes the mirror.',weights:{class:{stalker:3,brawler:2,tank:3},species:{vampire:4,werewolf:4,zombie:1}}},
+        {id:'a2',text:'Stopping. The moment you stop moving is the moment you are finished.',weights:{class:{stalker:2,brawler:3,tank:4},species:{vampire:1,werewolf:2,zombie:5}}},
+        {id:'a3',text:'Being seen. The moment they know what you are.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:5,werewolf:1,zombie:2}}}
       ]},
-      {id:'q4',axis:'class',prompt:'A survivor begs you to go back for someone who was left behind. What is your answer?',answers:[
-        {id:'a1',text:'You already scouted the route. You know exactly what it will cost.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:4,werewolf:1,zombie:2}}},
-        {id:'a2',text:'You are already moving. You do not wait for permission.',weights:{class:{stalker:1,brawler:5,tank:2},species:{vampire:1,werewolf:5,zombie:2}}},
-        {id:'a3',text:'You go. But you make the survivor stay behind. You are not risking two people.',weights:{class:{stalker:2,brawler:1,tank:5},species:{vampire:2,werewolf:3,zombie:4}}}
+      {id:'q4',axis:'class',prompt:'The group wants to wait for backup. You:',answers:[
+        {id:'a1',text:'Agree — patience is a weapon.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:4,werewolf:1,zombie:3}}},
+        {id:'a2',text:'Override them. Every second waiting is a second it gets stronger.',weights:{class:{stalker:1,brawler:5,tank:2},species:{vampire:1,werewolf:5,zombie:2}}},
+        {id:'a3',text:'Stay and hold the position until they return.',weights:{class:{stalker:2,brawler:2,tank:5},species:{vampire:2,werewolf:2,zombie:5}}}
       ]},
-      {id:'q5',axis:'species',prompt:'The hunger you feel is changing. It is no longer for food. What do you reach for?',answers:[
-        {id:'a1',text:'Something warm. Something alive. The thought arrives before the shame does.',weights:{class:{stalker:3,brawler:2,tank:2},species:{vampire:5,werewolf:2,zombie:1}}},
-        {id:'a2',text:'Movement. Heat. The instinct to chase and bring down.',weights:{class:{stalker:1,brawler:4,tank:2},species:{vampire:1,werewolf:5,zombie:2}}},
-        {id:'a3',text:'You do not know. You are not sure you still feel hunger the way you did.',weights:{class:{stalker:2,brawler:1,tank:4},species:{vampire:2,werewolf:1,zombie:5}}}
+      {id:'q5',axis:'species',prompt:'How long have you been this way?',answers:[
+        {id:'a1',text:'Long enough to have forgotten what before felt like.',weights:{class:{stalker:3,brawler:2,tank:4},species:{vampire:5,werewolf:1,zombie:4}}},
+        {id:'a2',text:'It comes and goes. Some nights more than others.',weights:{class:{stalker:3,brawler:4,tank:2},species:{vampire:2,werewolf:5,zombie:1}}},
+        {id:'a3',text:'You do not track time the way you used to.',weights:{class:{stalker:2,brawler:2,tank:5},species:{vampire:2,werewolf:2,zombie:5}}}
       ]},
-      {id:'q6',axis:'class',prompt:'The group wants to vote on whether to fortify or flee. You have thirty seconds before the decision is made for you. What do you say?',answers:[
-        {id:'a1',text:'Nothing. You have already left to secure the perimeter.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:4,werewolf:2,zombie:1}}},
-        {id:'a2',text:'We fight. Standing still is how you die.',weights:{class:{stalker:0,brawler:5,tank:2},species:{vampire:2,werewolf:5,zombie:2}}},
-        {id:'a3',text:'We fortify. I will hold whatever comes through that door.',weights:{class:{stalker:1,brawler:2,tank:5},species:{vampire:1,werewolf:2,zombie:5}}}
+      {id:'q6',axis:'both',prompt:'You find a survivor, injured, alone. Your first thought?',answers:[
+        {id:'a1',text:'Get them somewhere safe. Now.',weights:{class:{stalker:2,brawler:4,tank:4},species:{vampire:1,werewolf:4,zombie:3}}},
+        {id:'a2',text:'What do they know? What did they see?',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:5,werewolf:1,zombie:2}}},
+        {id:'a3',text:'Are they alone? Or is something using them as bait?',weights:{class:{stalker:4,brawler:3,tank:3},species:{vampire:3,werewolf:3,zombie:3}}}
       ]},
-      {id:'q7',axis:'both',prompt:'You find a journal from someone who did not make it. The last entry is dated three days from now. Do you read it?',answers:[
-        {id:'a1',text:'Yes. Every word. Knowledge of what is coming is the only advantage you have.',weights:{class:{stalker:5,brawler:0,tank:2},species:{vampire:5,werewolf:1,zombie:2}}},
-        {id:'a2',text:'You skim it for useful information and move on. Grief is a luxury.',weights:{class:{stalker:2,brawler:4,tank:3},species:{vampire:2,werewolf:4,zombie:3}}},
-        {id:'a3',text:'You read it, but you do not tell the others what it says.',weights:{class:{stalker:4,brawler:1,tank:3},species:{vampire:4,werewolf:2,zombie:3}}}
+      {id:'q7',axis:'class',prompt:'Your best option requires walking into a trap. You:',answers:[
+        {id:'a1',text:'Walk in anyway. Make them regret setting it.',weights:{class:{stalker:1,brawler:5,tank:3},species:{vampire:1,werewolf:5,zombie:3}}},
+        {id:'a2',text:'Dismantle the trap before you enter.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:4,werewolf:1,zombie:3}}},
+        {id:'a3',text:'Enter it on your terms, not theirs.',weights:{class:{stalker:3,brawler:3,tank:4},species:{vampire:3,werewolf:3,zombie:4}}}
       ]},
-      {id:'q8',axis:'species',prompt:'Another survivor recognizes what you are becoming. How do you respond?',answers:[
-        {id:'a1',text:'You hold their gaze and let them decide if they are still afraid.',weights:{class:{stalker:4,brawler:1,tank:2},species:{vampire:5,werewolf:2,zombie:1}}},
-        {id:'a2',text:'You show them what you can do. Fear is better than doubt.',weights:{class:{stalker:1,brawler:5,tank:2},species:{vampire:2,werewolf:5,zombie:1}}},
-        {id:'a3',text:'You say nothing. You are not sure you could explain it even if you tried.',weights:{class:{stalker:2,brawler:2,tank:4},species:{vampire:1,werewolf:2,zombie:5}}}
+      {id:'q8',axis:'species',prompt:'What keeps you going when it would be easier to stop?',answers:[
+        {id:'a1',text:'Hunger. The kind that does not negotiate.',weights:{class:{stalker:3,brawler:3,tank:3},species:{vampire:4,werewolf:3,zombie:4}}},
+        {id:'a2',text:'Instinct. Your body does not know how to quit.',weights:{class:{stalker:2,brawler:5,tank:3},species:{vampire:1,werewolf:5,zombie:3}}},
+        {id:'a3',text:'Someone needs you to. That is enough.',weights:{class:{stalker:3,brawler:2,tank:5},species:{vampire:2,werewolf:3,zombie:4}}}
       ]},
-      {id:'q9',axis:'class',prompt:'Something has been following your group for two days. It has not attacked. Why do you think it is waiting?',answers:[
-        {id:'a1',text:'It is learning you. Which means you should be learning it faster.',weights:{class:{stalker:5,brawler:1,tank:2},species:{vampire:5,werewolf:1,zombie:1}}},
-        {id:'a2',text:'It does not matter why. You double back and end the question.',weights:{class:{stalker:1,brawler:5,tank:2},species:{vampire:1,werewolf:5,zombie:2}}},
-        {id:'a3',text:'It is waiting for you to be weaker. So you make sure that never happens.',weights:{class:{stalker:2,brawler:2,tank:5},species:{vampire:2,werewolf:3,zombie:4}}}
+      {id:'q9',axis:'class',prompt:'The enemy is faster than you. Your approach:',answers:[
+        {id:'a1',text:'Do not let it move. Pin it, end it.',weights:{class:{stalker:2,brawler:4,tank:5},species:{vampire:2,werewolf:3,zombie:5}}},
+        {id:'a2',text:'Predict its next move and be there first.',weights:{class:{stalker:5,brawler:2,tank:1},species:{vampire:5,werewolf:2,zombie:1}}},
+        {id:'a3',text:'Absorb the first hit to understand the rhythm, then respond.',weights:{class:{stalker:3,brawler:3,tank:4},species:{vampire:3,werewolf:4,zombie:3}}}
       ]},
-      {id:'q10',axis:'species',prompt:'When this is over — if it is ever over — what do you want people to remember about you?',answers:[
-        {id:'a1',text:'That they never saw you coming until it was already done.',weights:{class:{stalker:5,brawler:1,tank:1},species:{vampire:5,werewolf:1,zombie:2}}},
-        {id:'a2',text:'That you hit the hardest and got back up every time.',weights:{class:{stalker:1,brawler:5,tank:2},species:{vampire:1,werewolf:5,zombie:3}}},
-        {id:'a3',text:'That while you were standing, nothing got through.',weights:{class:{stalker:1,brawler:2,tank:5},species:{vampire:2,werewolf:3,zombie:5}}}
+      {id:'q10',axis:'species',prompt:'At its core, what are you?',answers:[
+        {id:'a1',text:'A predator wearing patience like a coat.',weights:{class:{stalker:5,brawler:2,tank:2},species:{vampire:5,werewolf:2,zombie:1}}},
+        {id:'a2',text:'A force. Not controlled, not reasoned with — endured.',weights:{class:{stalker:2,brawler:5,tank:3},species:{vampire:1,werewolf:5,zombie:4}}},
+        {id:'a3',text:'Whatever is necessary. Whatever survives.',weights:{class:{stalker:3,brawler:3,tank:4},species:{vampire:3,werewolf:3,zombie:5}}}
       ]}
     ]
+  },
+  {
+    id:'scifi',
+    meta:{name:'Sci-Fi',description:'The stars hold secrets. Technology and consciousness blur at the edge of the known.',author:'official',locked:true,currency_name:'Credits'},
+    icon:'🚀',tags:['Technology','Space','Transhuman']
   }
 ];
 
-// ── STATE ──
-let state = {
-  setting: null,
-  currentQ: 0,
-  answers: [],
-  classScores: {},
-  specScores: {},
-  tieType: null,
-  tieOptions: [],
-  finalClass: null,
-  finalSpecies: null
-};
+const BASE_IMPRINTS = [
+  {id:'iron_hide',name:'Iron Hide',description:'Soak gains from Supernatural.',cost:1,modifiers:[{stat:'soak',operation:'add_attr_pct',attribute:'supernatural',value:0.02}]},
+  {id:'iron_will',name:'Iron Will',description:'Focus gains from Physical.',cost:1,modifiers:[{stat:'focus',operation:'add_attr_pct',attribute:'physical',value:1}]},
+  {id:'predator',name:'Predator',description:'Power gains 25% of Mental.',cost:1,modifiers:[{stat:'power',operation:'add_attr_pct',attribute:'mental',value:0.25}]},
+  {id:'ghost_step',name:'Ghost Step',description:'Evade gains 30% of Physical.',cost:1,modifiers:[{stat:'evade',operation:'add_attr_pct',attribute:'physical',value:0.30}]},
+  {id:'undying',name:'Undying',description:'Vitality gains Supernatural x3.',cost:2,modifiers:[{stat:'vitality',operation:'add_attr_pct',attribute:'supernatural',value:3}]},
+  {id:'arcane_body',name:'Arcane Body',description:'Soak Physical contribution replaced by Supernatural.',cost:2,modifiers:[{stat:'soak',operation:'replace_attr',from:'physical',to:'supernatural'}]}
+];
 
-// ── SCREEN MANAGEMENT ──
+// ═══════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════
+let flowState = {setting:null,currentQ:0,answers:[],classScores:{},specScores:{},finalClass:null,finalSpecies:null,_classTiedOptions:null,_specTiedOptions:null};
+let player = null;
+let combatState = {active:false,round:0,isTutorial:false,enemy:null,enemyDef:null,diffMult:1,current:{vitality:0,focus:0},enemyCurrent:{vitality:0,focus:0},companionCurrent:null,tick:null};
+let computed = {dirty:true,max:{vitality:0,focus:0,power:0,evade:0,block:0,soak:0}};
+let pendingLoot = null;
+
+// ═══════════════════════════════════════════
+// PERSISTENCE
+// ═══════════════════════════════════════════
+function saveGame(){
+  if(!player)return;
+  try{localStorage.setItem('forge_save',JSON.stringify({player}));}catch(e){}
+}
+function loadGame(){
+  try{
+    const raw=localStorage.getItem('forge_save');
+    if(!raw)return false;
+    const d=JSON.parse(raw);
+    player=d.player;computed.dirty=true;return true;
+  }catch(e){return false;}
+}
+function clearSave(){try{localStorage.removeItem('forge_save');}catch(e){}}
+
+// ═══════════════════════════════════════════
+// FORMULAS
+// ═══════════════════════════════════════════
+function calcStats(attr,level,imprints){
+  const p=attr.physical,m=attr.mental,s=attr.supernatural;
+  const highest=Math.max(p,m,s);
+  let stats={
+    vitality:(p*5)+(s*2)+(level*3),
+    focus:(m*5)+(s*3)+(level*2),
+    power:(highest*4)+(p*2)+(level*2),
+    evade:(m*3)+(s*2)+(level*1),
+    block:(p*3)+(s*2)+(level*1),
+    soak:Math.min((p*4)+(level*1),60)
+  };
+  let soakReplaced=false;
+  (imprints||[]).forEach(id=>{
+    const imp=BASE_IMPRINTS.find(i=>i.id===id);
+    if(!imp)return;
+    imp.modifiers.forEach(mod=>{
+      if(mod.operation==='add_attr_pct') stats[mod.stat]+=Math.round(attr[mod.attribute]*mod.value);
+      else if(mod.operation==='replace_attr'&&mod.stat==='soak'&&!soakReplaced){
+        const old=(attr[mod.from]*4)+(level*1);
+        const neu=(attr[mod.to]*4)+(level*1);
+        stats.soak=Math.min(stats.soak-old+neu,60);
+        soakReplaced=true;
+      }
+    });
+  });
+  stats.soak=Math.max(0,Math.min(60,Math.round(stats.soak)));
+  return stats;
+}
+
+function getEquipMods(){
+  if(!player)return{physical:0,mental:0,supernatural:0};
+  const mods={physical:0,mental:0,supernatural:0};
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  if(!setting||!setting.gear)return mods;
+  SLOTS.forEach(slot=>{
+    const inst=player.equipment[slot];
+    if(!inst)return;
+    const tmpl=setting.gear.find(g=>g.id===inst.item_id);
+    if(!tmpl)return;
+    const mult=RARITY_MULTIPLIER[inst.rarity]||1;
+    Object.entries(tmpl.modifiers).forEach(([k,v])=>{mods[k]+=Math.round(v*mult);});
+  });
+  return mods;
+}
+
+function getComputedStats(){
+  if(!computed.dirty)return computed.max;
+  if(!player)return computed.max;
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const cls=setting.classes.find(c=>c.id===player.class_id);
+  const sp=setting.species.find(s=>s.id===player.species_id);
+  const eq=getEquipMods();
+  const attr={
+    physical:cls.attribute_contribution.physical+sp.attribute_contribution.physical+eq.physical,
+    mental:cls.attribute_contribution.mental+sp.attribute_contribution.mental+eq.mental,
+    supernatural:cls.attribute_contribution.supernatural+sp.attribute_contribution.supernatural+eq.supernatural
+  };
+  player.attributes=attr;
+  computed.max=calcStats(attr,player.level,player.imprints);
+  computed.dirty=false;
+  return computed.max;
+}
+
+function applyStatDelta(oldMax,newMax,current){
+  return Math.max(0,Math.min(current+(newMax-oldMax),newMax));
+}
+
+// ═══════════════════════════════════════════
+// LOOT
+// ═══════════════════════════════════════════
+function rollLoot(enemyDef,diffMult,forceItem,forceRarity){
+  if(forceItem&&forceRarity){
+    const setting=SETTINGS.find(s=>s.id===player.setting_id);
+    const tmpl=setting.gear.find(g=>g.id===forceItem);
+    if(!tmpl)return null;
+    return{item_id:forceItem,rarity:forceRarity,template:tmpl,acquired:new Date().toISOString().split('T')[0]};
+  }
+  const lootMods={0.6:0.8,1:1,1.5:1.5,2.2:3};
+  const lootMod=lootMods[diffMult]||1;
+  const rawChance=(BASE_FREQUENCY+enemyDef.loot.frequency)*lootMod;
+  const overkill=rawChance>=DROP_CHANCE_OVERKILL;
+  const dropChance=Math.min(rawChance,1.0);
+  if(Math.random()>dropChance)return null;
+  const ri={common:0,uncommon:1,rare:2,legendary:3,epic:4};
+  let minIdx=ri[enemyDef.loot.min_rarity]||0;
+  let maxIdx=ri[enemyDef.loot.max_rarity]||2;
+  if(diffMult===0.6){minIdx=Math.max(0,minIdx-1);maxIdx=Math.max(0,maxIdx-1);}
+  else if(diffMult===1.5){minIdx=Math.min(3,minIdx+1);}
+  else if(diffMult===2.2){maxIdx=Math.min(3,maxIdx+1);}
+  const roll=Math.floor(Math.random()*(maxIdx-minIdx+1))+minIdx;
+  let rarity=RARITY_ORDER[roll]||'common';
+  if(overkill&&rarity==='legendary')rarity='epic';
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const mult=RARITY_MULTIPLIER[rarity]||1;
+  const pool=(setting.gear||[]).filter(g=>{
+    const val=g.disposition.base_value*mult;
+    const sal=g.disposition.base_salvage*mult;
+    return val>=enemyDef.loot.min_value&&val<=enemyDef.loot.max_value+20&&
+           sal>=enemyDef.loot.min_salvage&&sal<=enemyDef.loot.max_salvage+10&&
+           g.min_level<=player.level+2;
+  });
+  if(!pool.length){
+    const fallback=(setting.gear||[]).filter(g=>g.min_level<=player.level+2);
+    if(!fallback.length)return null;
+    const tmpl=fallback[Math.floor(Math.random()*fallback.length)];
+    return{item_id:tmpl.id,rarity:'common',template:tmpl,acquired:new Date().toISOString().split('T')[0]};
+  }
+  const tmpl=pool[Math.floor(Math.random()*pool.length)];
+  return{item_id:tmpl.id,rarity,template:tmpl,acquired:new Date().toISOString().split('T')[0]};
+}
+
+function processLootDrop(lootInst){
+  if(!lootInst)return;
+  const slot=lootInst.template.slot;
+  const equipped=player.equipment[slot];
+  if(!equipped){
+    player.equipment[slot]=lootInst;
+    computed.dirty=true;
+    showToast('Auto-equipped: '+lootInst.template.name+' ('+lootInst.rarity+')');
+    updateSidebarEquipment();updateTopbarEconomy();saveGame();renderInventory();
+  } else {
+    if(player.level<5){
+      showLootModal(lootInst,equipped);
+    } else {
+      player.inventory.push(lootInst);
+      showToast('Stored: '+lootInst.template.name+' ('+lootInst.rarity+')');
+      saveGame();renderInventory();
+    }
+  }
+}
+
+function showLootModal(newItem,currentItem){
+  pendingLoot=newItem;
+  const mult=RARITY_MULTIPLIER[newItem.rarity]||1;
+  const curMult=currentItem?RARITY_MULTIPLIER[currentItem.rarity]||1:0;
+  const nMods=newItem.template.modifiers;
+  const cMods=currentItem?currentItem.template.modifiers:{physical:0,mental:0,supernatural:0};
+  const sellVal=Math.round(newItem.template.disposition.base_value*mult);
+  const salvageVal=Math.round(newItem.template.disposition.base_salvage*mult);
+  const statLine=(label,nv,cv)=>{
+    const diff=nv-cv;
+    const cls=diff>0?'loot-stat-better':diff<0?'loot-stat-worse':'';
+    return '<div class="loot-stat '+cls+'"><span>'+label+'</span><span>+'+(nv>0?nv:nv)+(diff!==0?' ('+(diff>0?'+':'')+diff+')':'')+'</span></div>';
+  };
+  document.getElementById('loot-compare').innerHTML=
+    '<div><div class="loot-col-title">New Item</div>'+
+    '<div class="loot-item-name">'+newItem.template.name+'</div>'+
+    '<div class="loot-item-rarity rarity-'+newItem.rarity+'">'+newItem.rarity.toUpperCase()+'</div>'+
+    '<div>'+Object.entries(nMods).filter(([k,v])=>v>0).map(([k,v])=>statLine(k.charAt(0).toUpperCase()+k.slice(1),Math.round(v*mult),Math.round((cMods[k]||0)*curMult))).join('')+'</div></div>'+
+    '<div class="loot-vs">VS</div>'+
+    '<div>'+(currentItem?
+      '<div class="loot-col-title">Equipped</div>'+
+      '<div class="loot-item-name">'+currentItem.template.name+'</div>'+
+      '<div class="loot-item-rarity rarity-'+currentItem.rarity+'">'+currentItem.rarity.toUpperCase()+'</div>'+
+      '<div>'+Object.entries(cMods).filter(([k,v])=>v>0).map(([k,v])=>'<div class="loot-stat"><span>'+k.charAt(0).toUpperCase()+k.slice(1)+'</span><span>+'+Math.round(v*curMult)+'</span></div>').join('')+'</div>'
+      :'<div style="color:var(--ink3);font-style:italic;font-size:12px">Empty slot</div>')+'</div>';
+  document.getElementById('loot-values').innerHTML=
+    '<div class="loot-value-item"><div class="loot-value-label">Sell Value</div><div class="loot-value-num">'+sellVal+' '+player.currency_name+'</div></div>'+
+    '<div class="loot-value-item"><div class="loot-value-label">Salvage</div><div class="loot-value-num">'+salvageVal+' Fragments</div></div>';
+  document.getElementById('loot-actions').innerHTML=
+    '<button class="loot-action-btn equip" onclick="lootDecision(\'equip\')">Equip</button>'+
+    '<button class="loot-action-btn store" onclick="lootDecision(\'store\')">Store</button>'+
+    '<button class="loot-action-btn sell" onclick="lootDecision(\'sell\')">Sell<br><small>'+sellVal+'</small></button>'+
+    '<button class="loot-action-btn salvage" onclick="lootDecision(\'salvage\')">Salvage<br><small>'+salvageVal+'&#x2726;</small></button>';
+  document.getElementById('loot-modal').classList.add('show');
+}
+
+function lootDecision(action){
+  if(!pendingLoot)return;
+  document.getElementById('loot-modal').classList.remove('show');
+  const item=pendingLoot;pendingLoot=null;
+  const slot=item.template.slot;
+  const mult=RARITY_MULTIPLIER[item.rarity]||1;
+  const sellVal=Math.round(item.template.disposition.base_value*mult);
+  const salvageVal=Math.round(item.template.disposition.base_salvage*mult);
+  if(action==='equip'){
+    const oldStats=getComputedStats();
+    const old=player.equipment[slot];
+    if(old)player.inventory.push(old);
+    player.equipment[slot]=item;computed.dirty=true;
+    const newStats=getComputedStats();
+    combatState.current.vitality=applyStatDelta(oldStats.vitality,newStats.vitality,combatState.current.vitality);
+    combatState.current.focus=applyStatDelta(oldStats.focus,newStats.focus,combatState.current.focus);
+    showToast('Equipped: '+item.template.name);updateSidebarEquipment();updateCombatArena();
+  } else if(action==='store'){
+    player.inventory.push(item);showToast('Stored: '+item.template.name);
+  } else if(action==='sell'){
+    player.currency+=sellVal;showToast('Sold for '+sellVal+' '+player.currency_name);
+  } else if(action==='salvage'){
+    addFragments(salvageVal);showToast('Salvaged: '+salvageVal+' fragments');
+  }
+  updateTopbarEconomy();renderInventory();saveGame();
+  if(!pendingLoot&&combatState.active===false){
+    setTimeout(()=>spawnNextEnemy(),1000);
+  }
+}
+
+function addFragments(amount){
+  player.fragments+=amount;
+  while(player.fragments>=SHARD_FRAGMENT_CONVERSION){
+    player.fragments-=SHARD_FRAGMENT_CONVERSION;player.shards++;
+    setTimeout(()=>showToast('&#x2726; New imprints available for discovery'),300);
+  }
+  updateTopbarEconomy();
+}
+
+// ═══════════════════════════════════════════
+// COMBAT ENGINE
+// ═══════════════════════════════════════════
+function resolveDamage(power,defEvade,defBlock,defSoak){
+  const evadeRoll=Math.random()*100;
+  const evaded=evadeRoll<defEvade;
+  const variance=Math.floor(Math.random()*Math.ceil(power*0.3));
+  const rawDmg=Math.round(power*0.85)+variance;
+  const isCrit=!evaded&&Math.random()<0.1;
+  const afterBlock=Math.max(1,rawDmg-defBlock);
+  const afterSoak=Math.round(afterBlock*(1-(defSoak/100)));
+  const finalDmg=isCrit?Math.round(afterSoak*1.5):Math.max(1,afterSoak);
+  return{evaded,finalDmg,isCrit};
+}
+
+function getSkillMods(){
+  const mods={self:{power_pct:0,evade_flat:0,block_pct:0,soak_flat:0},enemy:{power_pct:0,block_pct:0}};
+  if(!player||!player.skills.length)return mods;
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  player.skills.forEach(id=>{
+    const sk=(setting.skills||[]).find(s=>s.id===id);
+    if(!sk)return;
+    if(sk.modifiers.self)Object.entries(sk.modifiers.self).forEach(([k,v])=>{mods.self[k]=(mods.self[k]||0)+v;});
+    if(sk.modifiers.enemy)Object.entries(sk.modifiers.enemy).forEach(([k,v])=>{mods.enemy[k]=(mods.enemy[k]||0)+v;});
+  });
+  return mods;
+}
+
+function buildEnemyStats(def,diffMult){
+  const attr={
+    physical:Math.round(def.attributes.physical*diffMult),
+    mental:Math.round(def.attributes.mental*diffMult),
+    supernatural:Math.round(def.attributes.supernatural*diffMult)
+  };
+  return calcStats(attr,player.level,[]);
+}
+
+function startCombat(enemyId,diffMult,isTutorial){
+  if(combatState.tick)clearInterval(combatState.tick);
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const def=(setting.enemies||[]).find(e=>e.id===enemyId)||(setting.enemies||[])[0];
+  if(!def)return;
+  const enemyStats=buildEnemyStats(def,diffMult);
+  const playerStats=getComputedStats();
+  combatState={
+    active:true,round:0,isTutorial,enemy:enemyStats,enemyDef:def,diffMult,
+    current:{vitality:combatState.current.vitality||playerStats.vitality,focus:combatState.current.focus||playerStats.focus},
+    enemyCurrent:{vitality:enemyStats.vitality,focus:enemyStats.focus},
+    companionCurrent:null,tick:null
+  };
+  if(player.active_companion){
+    const comp=(setting.companions||[]).find(c=>c.id===player.active_companion);
+    if(comp){
+      const owned=player.companions.find(c=>c.companion_id===comp.id);
+      const lvl=owned?owned.level:1;
+      const mult=1+(lvl-1)*0.1;
+      const cAttr={physical:Math.round(comp.attributes.physical*mult),mental:Math.round(comp.attributes.mental*mult),supernatural:Math.round(comp.attributes.supernatural*mult)};
+      const cStats=calcStats(cAttr,player.level,[]);
+      combatState.companionCurrent={vitality:cStats.vitality,focus:cStats.focus,max:cStats,def:comp};
+    }
+  }
+  log('-- '+def.name+' approaches --','le-system');
+  updateCombatArena();
+  combatState.tick=setInterval(runCombatRound,COMBAT_TICK_MS);
+}
+
+function runCombatRound(){
+  if(!combatState.active)return;
+  combatState.round++;
+  const pStats=getComputedStats();
+  const skMods=getSkillMods();
+  const hasComp=combatState.companionCurrent&&combatState.companionCurrent.vitality>0&&combatState.companionCurrent.def;
+  log('-- Round '+combatState.round+' --','le-round');
+
+  // Player attacks enemy
+  const playerPwr=Math.round(pStats.power*(1+(skMods.self.power_pct||0)));
+  const pAtk=resolveDamage(playerPwr,combatState.enemy.evade,combatState.enemy.block,combatState.enemy.soak);
+  if(pAtk.evaded){
+    log('Your attack is evaded.','le-miss');
+  } else {
+    combatState.enemyCurrent.vitality=Math.max(0,combatState.enemyCurrent.vitality-pAtk.finalDmg);
+    log('You strike for '+pAtk.finalDmg+(pAtk.isCrit?' (critical!)':'')+' — Enemy: '+combatState.enemyCurrent.vitality+'/'+combatState.enemy.vitality,pAtk.isCrit?'le-crit':'le-hit');
+  }
+  if(combatState.enemyCurrent.vitality<=0){endCombat(true);return;}
+
+  // Companion attacks if alive
+  if(hasComp){
+    const cAtk=resolveDamage(combatState.companionCurrent.max.power,combatState.enemy.evade,combatState.enemy.block,combatState.enemy.soak);
+    if(!cAtk.evaded){
+      combatState.enemyCurrent.vitality=Math.max(0,combatState.enemyCurrent.vitality-cAtk.finalDmg);
+      log(combatState.companionCurrent.def.name+' strikes for '+cAtk.finalDmg+' — Enemy: '+combatState.enemyCurrent.vitality+'/'+combatState.enemy.vitality,'le-hit');
+    }
+    if(combatState.enemyCurrent.vitality<=0){endCombat(true);return;}
+  }
+
+  // Enemy attacks companion first, else player
+  const enemyPwr=Math.round(combatState.enemy.power*(1+(skMods.enemy.power_pct||0)));
+  if(hasComp){
+    const eAtk=resolveDamage(enemyPwr,combatState.companionCurrent.max.evade,combatState.companionCurrent.max.block,combatState.companionCurrent.max.soak);
+    if(!eAtk.evaded){
+      combatState.companionCurrent.vitality=Math.max(0,combatState.companionCurrent.vitality-eAtk.finalDmg);
+      log(combatState.enemyDef.name+' strikes '+combatState.companionCurrent.def.name+' for '+eAtk.finalDmg+' — '+combatState.companionCurrent.vitality+'/'+combatState.companionCurrent.max.vitality,eAtk.isCrit?'le-crit':'le-hit');
+      if(combatState.companionCurrent.vitality<=0)log(combatState.companionCurrent.def.name+' has fallen!','le-death');
+    }
+  } else {
+    const playerEvade=Math.min(95,pStats.evade+(skMods.self.evade_flat||0));
+    const playerBlock=Math.round(pStats.block*(1+(skMods.self.block_pct||0)));
+    const playerSoak=Math.min(85,pStats.soak+(skMods.self.soak_flat||0));
+    const eAtk=resolveDamage(enemyPwr,playerEvade,playerBlock,playerSoak);
+    if(eAtk.evaded){
+      log('You evade the attack.','le-miss');
+    } else {
+      combatState.current.vitality=Math.max(0,combatState.current.vitality-eAtk.finalDmg);
+      log(combatState.enemyDef.name+' strikes you for '+eAtk.finalDmg+(eAtk.isCrit?' (critical!)':'')+' — You: '+combatState.current.vitality+'/'+pStats.vitality,eAtk.isCrit?'le-crit':'le-hit');
+    }
+    if(combatState.current.vitality<=0){endCombat(false);return;}
+  }
+  updateCombatArena();
+}
+
+function endCombat(playerWon){
+  if(combatState.tick)clearInterval(combatState.tick);
+  combatState.active=false;
+  if(playerWon){
+    const essenceGain=Math.floor(combatState.enemy.vitality*0.5)+combatState.round;
+    player.essence+=essenceGain;
+    log('Victory! +'+essenceGain+' Essence','le-loot');
+    let lootInst;
+    if(combatState.isTutorial){
+      const setting=SETTINGS.find(s=>s.id===player.setting_id);
+      lootInst=rollLoot(combatState.enemyDef,combatState.diffMult,setting.tutorial.drop_item_id,setting.tutorial.drop_rarity);
+    } else {
+      lootInst=rollLoot(combatState.enemyDef,combatState.diffMult);
+    }
+    if(lootInst){
+      log('Loot: '+lootInst.template.name+' ('+lootInst.rarity+')','le-loot');
+      setTimeout(()=>{processLootDrop(lootInst);},600);
+    }
+    updateTopbarEconomy();saveGame();
+    if(!lootInst)setTimeout(()=>spawnNextEnemy(),2000);
+  } else {
+    log('Defeated in round '+combatState.round+'. You rise again.','le-death');
+    setTimeout(()=>{
+      const pStats=getComputedStats();
+      combatState.current={vitality:pStats.vitality,focus:pStats.focus};
+      updateCombatArena();
+      spawnNextEnemy();
+    },3000);
+  }
+  updateCombatArena();
+}
+
+function spawnNextEnemy(){
+  if(pendingLoot)return;
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const candidates=(setting.enemies||[]).filter(e=>e.id!==setting.tutorial.enemy_id);
+  if(!candidates.length)return;
+  const enemy=candidates[Math.floor(Math.random()*candidates.length)];
+  startCombat(enemy.id,1,false);
+}
+
+// ═══════════════════════════════════════════
+// UI — COMBAT ARENA
+// ═══════════════════════════════════════════
+function updateCombatArena(){
+  if(!player)return;
+  const pStats=getComputedStats();
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const cls=setting.classes.find(c=>c.id===player.class_id);
+  const sp=setting.species.find(s=>s.id===player.species_id);
+  document.getElementById('cb-player-name').textContent=cls.name+' \xB7 '+sp.name;
+  const cv=combatState.current.vitality,cf=combatState.current.focus;
+  document.getElementById('cb-player-vit-text').textContent=cv+'/'+pStats.vitality;
+  const vPct=Math.max(0,(cv/(pStats.vitality||1))*100);
+  const vBar=document.getElementById('cb-player-vit-bar');
+  vBar.style.width=vPct+'%';
+  vBar.className='cb-bar-fill vit'+(vPct>50?' high':'');
+  document.getElementById('cb-player-foc-text').textContent=cf+'/'+pStats.focus;
+  document.getElementById('cb-player-foc-bar').style.width=Math.max(0,(cf/(pStats.focus||1))*100)+'%';
+  document.getElementById('cb-player-pwr').textContent=pStats.power;
+  document.getElementById('cb-player-evd').textContent=pStats.evade+'%';
+  document.getElementById('cb-player-blk').textContent=pStats.block;
+  if(combatState.enemyDef){
+    document.getElementById('cb-enemy-name').textContent=combatState.enemyDef.name;
+    const ev=combatState.enemyCurrent.vitality,ef=combatState.enemyCurrent.focus;
+    document.getElementById('cb-enemy-vit-text').textContent=ev+'/'+(combatState.enemy.vitality);
+    document.getElementById('cb-enemy-vit-bar').style.width=Math.max(0,(ev/(combatState.enemy.vitality||1))*100)+'%';
+    document.getElementById('cb-enemy-foc-text').textContent=ef+'/'+(combatState.enemy.focus);
+    document.getElementById('cb-enemy-foc-bar').style.width=Math.max(0,(ef/(combatState.enemy.focus||1))*100)+'%';
+    document.getElementById('cb-enemy-pwr').textContent=combatState.enemy.power;
+    document.getElementById('cb-enemy-evd').textContent=combatState.enemy.evade+'%';
+    document.getElementById('cb-enemy-blk').textContent=combatState.enemy.block;
+  }
+  const strip=document.getElementById('companion-strip');
+  if(player.active_companion&&combatState.companionCurrent&&combatState.companionCurrent.def){
+    const cDef=combatState.companionCurrent.def;
+    const cv2=combatState.companionCurrent.vitality;
+    const cMax=combatState.companionCurrent.max?combatState.companionCurrent.max.vitality:1;
+    strip.innerHTML='<span class="companion-strip-label">Companion</span>'+
+      '<span class="companion-strip-name">'+cDef.name+'</span>'+
+      '<div class="companion-strip-bar"><div class="companion-strip-fill" style="width:'+Math.max(0,(cv2/cMax)*100)+'%"></div></div>'+
+      '<span style="font-size:10px;color:var(--gold);font-family:var(--display)">'+cv2+'/'+cMax+'</span>';
+  } else {
+    strip.innerHTML='<span class="companion-strip-label">Companion</span><span class="companion-strip-empty">No companion active</span>';
+  }
+  document.getElementById('cs-vit').textContent=combatState.current.vitality+'/'+pStats.vitality;
+  document.getElementById('cs-foc').textContent=combatState.current.focus+'/'+pStats.focus;
+  document.getElementById('cs-pwr').textContent=pStats.power;
+  document.getElementById('cs-evd').textContent=pStats.evade+'%';
+  document.getElementById('cs-blk').textContent=pStats.block;
+  document.getElementById('cs-sok').textContent=pStats.soak+'%';
+}
+
+function updateSidebarEquipment(){
+  if(!player)return;
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  document.getElementById('sidebar-equipment').innerHTML=SLOTS.map(slot=>{
+    const inst=player.equipment[slot];
+    if(!inst)return '<div class="eq-slot-row"><span class="eq-slot-name">'+SLOT_LABELS[slot]+'</span><span class="eq-slot-item empty">—</span></div>';
+    const tmpl=(setting.gear||[]).find(g=>g.id===inst.item_id);
+    return '<div class="eq-slot-row"><span class="eq-slot-name">'+SLOT_LABELS[slot]+'</span><span class="eq-slot-item rarity-'+inst.rarity+'">'+(tmpl?tmpl.name:inst.item_id)+'</span></div>';
+  }).join('');
+}
+
+function updateTopbarEconomy(){
+  if(!player)return;
+  document.getElementById('eco-essence').textContent=player.essence;
+  document.getElementById('eco-shards').textContent=player.shards;
+  document.getElementById('eco-currency').textContent=player.currency;
+  document.getElementById('eco-fragments').textContent=player.fragments;
+  document.getElementById('eco-level').textContent=player.level;
+  document.getElementById('eco-currency-label').textContent=player.currency_name;
+}
+
+function log(msg,cls){
+  cls=cls||'le-info';
+  const el=document.getElementById('log-entries');
+  const div=document.createElement('div');
+  div.className='log-entry '+cls;
+  div.textContent=msg;
+  el.appendChild(div);
+  el.scrollTop=el.scrollHeight;
+}
+
+function clearLog(){document.getElementById('log-entries').innerHTML='';}
+
+// ═══════════════════════════════════════════
+// UI — INVENTORY
+// ═══════════════════════════════════════════
+function renderInventory(){
+  if(!player)return;
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const grid=document.getElementById('inv-grid');
+  document.getElementById('inv-count').textContent=player.inventory.length+' items';
+  if(!player.inventory.length){
+    grid.innerHTML='<div class="inv-empty">Your pack is empty. Venture forth and claim what is yours.</div>';return;
+  }
+  grid.innerHTML=player.inventory.map((inst,idx)=>{
+    const tmpl=(setting.gear||[]).find(g=>g.id===inst.item_id);
+    if(!tmpl)return '';
+    const mult=RARITY_MULTIPLIER[inst.rarity]||1;
+    const sellVal=Math.round(tmpl.disposition.base_value*mult);
+    const salvageVal=Math.round(tmpl.disposition.base_salvage*mult);
+    const pills=Object.entries(tmpl.modifiers).filter(([k,v])=>v>0).map(([k,v])=>'<div class="inv-stat-pill">'+k.charAt(0).toUpperCase()+' +'+Math.round(v*mult)+'</div>').join('');
+    return '<div class="inv-item">'+
+      '<div class="inv-item-name rarity-'+inst.rarity+'">'+tmpl.name+'</div>'+
+      '<div class="inv-item-meta">'+SLOT_LABELS[tmpl.slot]+' \xB7 '+inst.rarity+'</div>'+
+      '<div class="inv-item-desc">'+tmpl.description+'</div>'+
+      '<div class="inv-item-stats">'+pills+'</div>'+
+      '<div class="inv-item-actions">'+
+      '<button class="inv-btn inv-btn-equip" onclick="equipFromInventory('+idx+')">Equip</button>'+
+      '<button class="inv-btn inv-btn-sell" onclick="sellFromInventory('+idx+')">Sell '+sellVal+'</button>'+
+      '<button class="inv-btn inv-btn-salvage" onclick="salvageFromInventory('+idx+')">Salvage '+salvageVal+'&#x2726;</button>'+
+      '</div></div>';
+  }).join('');
+}
+
+function equipFromInventory(idx){
+  const inst=player.inventory[idx];if(!inst)return;
+  const slot=inst.template.slot;
+  const oldStats=getComputedStats();
+  const old=player.equipment[slot];
+  if(old)player.inventory.push(old);
+  player.equipment[slot]=inst;player.inventory.splice(idx,1);
+  computed.dirty=true;
+  const newStats=getComputedStats();
+  combatState.current.vitality=applyStatDelta(oldStats.vitality,newStats.vitality,combatState.current.vitality);
+  combatState.current.focus=applyStatDelta(oldStats.focus,newStats.focus,combatState.current.focus);
+  showToast('Equipped: '+inst.template.name);
+  renderInventory();updateSidebarEquipment();updateCombatArena();saveGame();
+}
+
+function sellFromInventory(idx){
+  const inst=player.inventory[idx];if(!inst)return;
+  const mult=RARITY_MULTIPLIER[inst.rarity]||1;
+  const val=Math.round(inst.template.disposition.base_value*mult);
+  player.currency+=val;player.inventory.splice(idx,1);
+  showToast('Sold for '+val+' '+player.currency_name);
+  updateTopbarEconomy();renderInventory();renderCompanions();saveGame();
+}
+
+function salvageFromInventory(idx){
+  const inst=player.inventory[idx];if(!inst)return;
+  const mult=RARITY_MULTIPLIER[inst.rarity]||1;
+  const val=Math.round(inst.template.disposition.base_salvage*mult);
+  player.inventory.splice(idx,1);
+  addFragments(val);
+  showToast('Salvaged: '+val+' fragments');
+  updateTopbarEconomy();renderInventory();saveGame();
+}
+
+// ═══════════════════════════════════════════
+// UI — CHARACTER PANEL
+// ═══════════════════════════════════════════
+function renderCharacterPanel(){
+  if(!player)return;
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const cls=setting.classes.find(c=>c.id===player.class_id);
+  const sp=setting.species.find(s=>s.id===player.species_id);
+  const stats=getComputedStats();
+  const attr=player.attributes||{physical:0,mental:0,supernatural:0};
+  const maxAttr=Math.max(attr.physical,attr.mental,attr.supernatural,1);
+  document.getElementById('char-panel-title').textContent=cls.name+' of '+sp.name+' Heritage';
+  document.getElementById('char-panel-sub').textContent='Level '+player.level+' \xB7 '+setting.meta.name;
+  document.getElementById('char-panel-body').innerHTML=
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">'+
+    '<div>'+
+    '<div style="font-family:var(--display);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px">Base Attributes</div>'+
+    [['Physical',attr.physical,'#b8860b'],['Mental',attr.mental,'#7ab4f5'],['Supernatural',attr.supernatural,'#bb88ff']].map(([n,v,c])=>
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'+
+      '<span style="font-family:var(--display);font-size:10px;color:var(--ink3);min-width:90px;text-transform:uppercase">'+n+'</span>'+
+      '<div style="flex:1;height:6px;background:rgba(26,16,8,0.6);border:1px solid rgba(184,134,11,0.1)"><div style="height:100%;background:'+c+';width:'+Math.round((v/maxAttr)*100)+'%"></div></div>'+
+      '<span style="font-family:var(--display);font-size:12px;color:'+c+';font-weight:700;min-width:24px;text-align:right">'+v+'</span></div>'
+    ).join('')+
+    '</div>'+
+    '<div>'+
+    '<div style="font-family:var(--display);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px">Combat Stats</div>'+
+    [['Vitality',stats.vitality],['Focus',stats.focus],['Power',stats.power],['Evade',stats.evade+'%'],['Block',stats.block],['Soak',stats.soak+'%']].map(([n,v])=>
+      '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(184,134,11,0.08)">'+
+      '<span style="font-size:10px;color:var(--ink3);font-family:var(--display);text-transform:uppercase">'+n+'</span>'+
+      '<span style="font-family:var(--display);font-size:12px;color:var(--parchment3);font-weight:700">'+v+'</span></div>'
+    ).join('')+
+    '</div></div>'+
+    '<div style="margin-top:20px">'+
+    '<div style="font-family:var(--display);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px">Active Imprints</div>'+
+    (player.imprints.length
+      ?player.imprints.map(id=>{const imp=BASE_IMPRINTS.find(i=>i.id===id);return imp?'<div style="font-size:12px;color:var(--gold);margin-bottom:4px">&#x25C6; '+imp.name+' \u2014 '+imp.description+'</div>':''}).join('')
+      :'<div style="font-size:12px;color:var(--ink3);font-style:italic">No imprints. Acquire shards to discover imprints.</div>')+
+    '</div>';
+}
+
+// ═══════════════════════════════════════════
+// UI — COMPANIONS
+// ═══════════════════════════════════════════
+function renderCompanions(){
+  if(!player)return;
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  document.getElementById('comp-currency-display').textContent=player.currency+' '+player.currency_name+' available';
+  document.getElementById('companion-grid').innerHTML=(setting.companions||[]).map(comp=>{
+    const owned=player.companions.find(c=>c.companion_id===comp.id);
+    const isActive=player.active_companion===comp.id;
+    const mult=owned?1+(owned.level-1)*0.1:1;
+    const upgradeCost=owned?Math.round(comp.upgrade_cost_base*(1+(owned.level-1)*0.5)):0;
+    return '<div class="companion-card '+(owned?'owned ':''+(isActive?'active-companion':''))+'">'+
+      '<div class="cc-name">'+comp.name+(isActive?' &#x2726;':'')+'</div>'+
+      (owned?'<div class="cc-level">Level '+owned.level+'</div>':'')+
+      '<div class="cc-desc">'+comp.description+'</div>'+
+      '<div class="cc-attrs">'+
+      ['physical','mental','supernatural'].map(a=>'<div class="cc-attr"><div class="cc-attr-label">'+a.charAt(0).toUpperCase()+a.slice(1)+'</div><div class="cc-attr-val">'+Math.round(comp.attributes[a]*mult)+'</div></div>').join('')+
+      '</div>'+
+      '<div class="cc-actions">'+
+      (!owned?'<button class="cc-btn cc-btn-buy" onclick="buyCompanion(\''+comp.id+'\')">Buy \u2014 '+comp.cost+' '+player.currency_name+'</button>':'')+
+      (owned&&!isActive?'<button class="cc-btn cc-btn-activate" onclick="activateCompanion(\''+comp.id+'\')">Activate</button>':'')+
+      (isActive?'<button class="cc-btn cc-btn-active">Active</button>':'')+
+      (owned?'<button class="cc-btn cc-btn-buy" onclick="upgradeCompanion(\''+comp.id+'\')">Upgrade \u2014 '+upgradeCost+'</button>':'')+
+      (owned?'<button class="cc-btn cc-btn-dismiss" onclick="dismissCompanion(\''+comp.id+'\')">Dismiss</button>':'')+
+      '</div></div>';
+  }).join('');
+}
+
+function buyCompanion(id){
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const comp=(setting.companions||[]).find(c=>c.id===id);
+  if(!comp||player.companions.find(c=>c.companion_id===id))return;
+  if(player.currency<comp.cost){showToast('Not enough '+player.currency_name);return;}
+  player.currency-=comp.cost;
+  player.companions.push({companion_id:id,level:1,currency_invested:comp.cost});
+  showToast(comp.name+' joins you.');updateTopbarEconomy();renderCompanions();saveGame();
+}
+
+function activateCompanion(id){
+  player.active_companion=id;showToast('Companion activated.');renderCompanions();saveGame();
+}
+
+function upgradeCompanion(id){
+  const setting=SETTINGS.find(s=>s.id===player.setting_id);
+  const comp=(setting.companions||[]).find(c=>c.id===id);
+  const owned=player.companions.find(c=>c.companion_id===id);
+  if(!comp||!owned)return;
+  const cost=Math.round(comp.upgrade_cost_base*(1+(owned.level-1)*0.5));
+  if(player.currency<cost){showToast('Not enough '+player.currency_name);return;}
+  player.currency-=cost;owned.level++;owned.currency_invested+=cost;
+  showToast(comp.name+' upgraded to level '+owned.level+'.');updateTopbarEconomy();renderCompanions();saveGame();
+}
+
+function dismissCompanion(id){
+  const owned=player.companions.find(c=>c.companion_id===id);
+  if(!owned)return;
+  player.currency+=owned.currency_invested;
+  player.companions=player.companions.filter(c=>c.companion_id!==id);
+  if(player.active_companion===id)player.active_companion=null;
+  showToast('Companion dismissed. '+owned.currency_invested+' '+player.currency_name+' refunded.');
+  updateTopbarEconomy();renderCompanions();saveGame();
+}
+
+// ═══════════════════════════════════════════
+// SCREEN & PANEL MANAGEMENT
+// ═══════════════════════════════════════════
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// ── SETTINGS SCREEN ──
+function showGamePanel(id){
+  document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.game-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='inventory')renderInventory();
+  if(id==='character')renderCharacterPanel();
+  if(id==='companions')renderCompanions();
+}
+
+function showToast(msg,duration){
+  duration=duration||3000;
+  const t=document.getElementById('toast');
+  t.innerHTML=msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'),duration);
+}
+
+// ═══════════════════════════════════════════
+// FLOW — SETTINGS
+// ═══════════════════════════════════════════
 function renderSettings(){
-  const grid = document.getElementById('settings-grid');
-  grid.innerHTML = SETTINGS.map(s => {
-    const locked = s.meta.locked;
-    return `<div class="setting-tile ${locked?'locked':''}" onclick="${locked?'':` selectSetting('${s.id}')`}">
-      ${locked?`<div class="tile-locked-badge">Coming Soon</div>`:''}
-      <div class="tile-icon">${s.icon}</div>
-      <div class="tile-name">${s.meta.name}</div>
-      <div class="tile-desc">${s.meta.description}</div>
-      <div class="tile-meta">${(s.tags||[]).map(t=>`<span class="tile-tag">${t}</span>`).join('')}</div>
-    </div>`;
+  document.getElementById('settings-grid').innerHTML=SETTINGS.map(s=>{
+    const locked=s.meta.locked;
+    return '<div class="setting-tile'+(locked?' locked':'')+'"'+(locked?'':' onclick="selectSetting(\''+s.id+'\')">  ')+'>'+(locked?'<div class="tile-locked-badge">Coming Soon</div>':'')+
+      '<div class="tile-icon">'+s.icon+'</div>'+
+      '<div class="tile-name">'+s.meta.name+'</div>'+
+      '<div class="tile-desc">'+s.meta.description+'</div>'+
+      '<div class="tile-meta">'+(s.tags||[]).map(t=>'<span class="tile-tag">'+t+'</span>').join('')+'</div>'+
+      '</div>';
   }).join('');
 }
 
 function selectSetting(id){
-  state.setting = SETTINGS.find(s=>s.id===id);
-  state.currentQ = 0;
-  state.answers = [];
-  state.classScores = {};
-  state.specScores = {};
-  state.setting.classes.forEach(c=>state.classScores[c.id]=0);
-  state.setting.species.forEach(s=>state.specScores[s.id]=0);
-  showScreen('screen-question');
-  renderQuestion();
+  flowState.setting=SETTINGS.find(s=>s.id===id);
+  flowState.currentQ=0;flowState.answers=[];flowState.classScores={};flowState.specScores={};
+  flowState.setting.classes.forEach(c=>flowState.classScores[c.id]=0);
+  flowState.setting.species.forEach(s=>flowState.specScores[s.id]=0);
+  showScreen('screen-question');renderQuestion();
 }
 
-// ── QUESTION SCREEN ──
+// ═══════════════════════════════════════════
+// FLOW — QUESTIONS
+// ═══════════════════════════════════════════
 function renderQuestion(){
-  const s = state.setting;
-  const q = s.questions[state.currentQ];
-  const total = s.questions.length;
-  const num = state.currentQ + 1;
-
-  document.getElementById('question-wrap').innerHTML = `
-    <div class="q-fade">
-      <div class="q-progress">
-        <div class="q-progress-track"><div class="q-progress-fill" style="width:${Math.round((state.currentQ/total)*100)}%"></div></div>
-        <div class="q-progress-label">${num} of ${total}</div>
-      </div>
-      <div class="q-setting-label">${s.meta.name}</div>
-      <div class="q-text">${q.prompt}</div>
-      <div class="q-answers">
-        ${q.answers.map((a,i)=>`
-          <button class="q-answer" onclick="selectAnswer(${i})">
-            <span class="q-answer-letter">${String.fromCharCode(65+i)}.</span>${a.text}
-          </button>`).join('')}
-      </div>
-      <div class="q-nav">
-        ${state.currentQ > 0 ? `<button class="q-back" onclick="goBack()">← Back</button>` : ''}
-      </div>
-    </div>`;
+  const s=flowState.setting,q=s.questions[flowState.currentQ];
+  const total=s.questions.length,num=flowState.currentQ+1;
+  document.getElementById('question-wrap').innerHTML=
+    '<div class="q-fade">'+
+    '<div class="q-progress"><div class="q-progress-track"><div class="q-progress-fill" style="width:'+Math.round((flowState.currentQ/total)*100)+'%"></div></div>'+
+    '<div class="q-progress-label">'+num+' of '+total+'</div></div>'+
+    '<div class="q-setting-label">'+s.meta.name+'</div>'+
+    '<div class="q-text">'+q.prompt+'</div>'+
+    '<div class="q-answers">'+q.answers.map((a,i)=>'<button class="q-answer" onclick="selectAnswer('+i+')"><span class="q-answer-letter">'+String.fromCharCode(65+i)+'.</span>'+a.text+'</button>').join('')+'</div>'+
+    '<div class="q-nav">'+(flowState.currentQ>0?'<button class="q-back" onclick="goBack()">&#x2190; Back</button>':'')+
+    '</div></div>';
 }
 
 function selectAnswer(idx){
-  // flash the chosen answer, then advance
   document.querySelectorAll('.q-answer').forEach((el,i)=>{
-    if(i===idx) el.classList.add('chosen');
-    else el.classList.add('choosing');
+    el.classList.toggle('chosen',i===idx);el.classList.toggle('choosing',i!==idx);
   });
-
   setTimeout(()=>{
-    const q = state.setting.questions[state.currentQ];
-    const a = q.answers[idx];
-
-    // tally scores and record answer for back navigation
-    Object.entries(a.weights.class||{}).forEach(([k,v])=>{ if(state.classScores[k]!==undefined) state.classScores[k]+=v; });
-    Object.entries(a.weights.species||{}).forEach(([k,v])=>{ if(state.specScores[k]!==undefined) state.specScores[k]+=v; });
-    state.answers[state.currentQ] = idx;
-
-    state.currentQ++;
-    if(state.currentQ < state.setting.questions.length){
-      renderQuestion();
-    } else {
-      resolveCharacter();
-    }
-  }, 320);
+    const q=flowState.setting.questions[flowState.currentQ];
+    const a=q.answers[idx];
+    Object.entries(a.weights.class||{}).forEach(([k,v])=>{if(flowState.classScores[k]!==undefined)flowState.classScores[k]+=v;});
+    Object.entries(a.weights.species||{}).forEach(([k,v])=>{if(flowState.specScores[k]!==undefined)flowState.specScores[k]+=v;});
+    flowState.answers[flowState.currentQ]=idx;flowState.currentQ++;
+    if(flowState.currentQ<flowState.setting.questions.length)renderQuestion();
+    else resolveCharacter();
+  },320);
 }
 
 function goBack(){
-  if(state.currentQ <= 0) return;
-  state.currentQ--;
-
-  // undo the scores from the answer we're backing away from
-  const q = state.setting.questions[state.currentQ];
-  const prevIdx = state.answers[state.currentQ];
-  if(prevIdx !== undefined){
-    const a = q.answers[prevIdx];
-    Object.entries(a.weights.class||{}).forEach(([k,v])=>{ if(state.classScores[k]!==undefined) state.classScores[k]-=v; });
-    Object.entries(a.weights.species||{}).forEach(([k,v])=>{ if(state.specScores[k]!==undefined) state.specScores[k]-=v; });
-    state.answers[state.currentQ] = undefined;
+  if(flowState.currentQ<=0)return;
+  flowState.currentQ--;
+  const q=flowState.setting.questions[flowState.currentQ];
+  const prevIdx=flowState.answers[flowState.currentQ];
+  if(prevIdx!==undefined){
+    const a=q.answers[prevIdx];
+    Object.entries(a.weights.class||{}).forEach(([k,v])=>{if(flowState.classScores[k]!==undefined)flowState.classScores[k]-=v;});
+    Object.entries(a.weights.species||{}).forEach(([k,v])=>{if(flowState.specScores[k]!==undefined)flowState.specScores[k]-=v;});
+    flowState.answers[flowState.currentQ]=undefined;
   }
-
   renderQuestion();
 }
 
-// ── SCORING & RESOLUTION ──
-function getTop(scores, entities){
-  const sorted = entities.slice().sort((a,b)=>(scores[b.id]||0)-(scores[a.id]||0));
-  const topScore = scores[sorted[0].id]||0;
-  const tied = sorted.filter(e=>(scores[e.id]||0)===topScore);
-  return { winner: sorted[0], tied, topScore };
+// ═══════════════════════════════════════════
+// FLOW — RESOLUTION & REVEAL
+// ═══════════════════════════════════════════
+function getTop(scores,entities){
+  const sorted=entities.slice().sort((a,b)=>(scores[b.id]||0)-(scores[a.id]||0));
+  const topScore=scores[sorted[0].id]||0;
+  return{winner:sorted[0],tied:sorted.filter(e=>(scores[e.id]||0)===topScore),topScore};
 }
 
 function resolveCharacter(){
-  const classResult = getTop(state.classScores, state.setting.classes);
-  const specResult = getTop(state.specScores, state.setting.species);
-
-  const classTied = classResult.tied.length > 1;
-  const specTied = specResult.tied.length > 1;
-
-  if(!classTied && !specTied){
-    state.finalClass = classResult.winner;
-    state.finalSpecies = specResult.winner;
-    showReveal();
-  } else {
-    // resolve ties one at a time
-    state._pendingClass = classTied ? null : classResult.winner;
-    state._pendingSpecies = specTied ? null : specResult.winner;
-    state._classTiedOptions = classTied ? classResult.tied : null;
-    state._specTiedOptions = specTied ? specResult.tied : null;
-
-    if(classTied){
-      showTie('class', classResult.tied, ()=>{
-        if(specTied){
-          showTie('species', specResult.tied, ()=>showReveal());
-        } else {
-          state.finalSpecies = specResult.winner;
-          showReveal();
-        }
-      });
-    } else {
-      state.finalClass = classResult.winner;
-      showTie('species', specResult.tied, ()=>showReveal());
-    }
+  const cr=getTop(flowState.classScores,flowState.setting.classes);
+  const sr=getTop(flowState.specScores,flowState.setting.species);
+  const cTied=cr.tied.length>1,sTied=sr.tied.length>1;
+  if(!cTied&&!sTied){flowState.finalClass=cr.winner;flowState.finalSpecies=sr.winner;showReveal();}
+  else{
+    flowState._classTiedOptions=cTied?cr.tied:null;flowState._specTiedOptions=sTied?sr.tied:null;
+    if(cTied){showTie('class',cr.tied,()=>{if(sTied)showTie('species',sr.tied,()=>showReveal());else{flowState.finalSpecies=sr.winner;showReveal();}});}
+    else{flowState.finalClass=cr.winner;showTie('species',sr.tied,()=>showReveal());}
   }
 }
 
-let _tieCallback = null;
-
-function showTie(axis, options, callback){
-  _tieCallback = callback;
-  const label = axis === 'class' ? 'Calling' : 'Bloodline';
-  const intro = axis === 'class'
-    ? 'Your choices point to two equal callings. The path forward is yours to name.'
-    : 'Your blood carries two ancient heritages in equal measure. Choose which runs truer.';
-
-  document.getElementById('tie-wrap').innerHTML = `
-    <div class="settings-rule" style="margin-bottom:32px"></div>
-    <div class="tie-title">A Divided Fate</div>
-    <div class="tie-sub">${intro}</div>
-    <div class="tie-options">
-      ${options.map(o=>`
-        <button class="tie-option" onclick="resolveTie('${axis}','${o.id}')">
-          <div class="tie-option-name">${o.name}</div>
-          <div class="tie-option-desc">${o.description}</div>
-        </button>`).join('')}
-    </div>
-    <button class="tie-random" onclick="resolveTie('${axis}','__random__')">Let fate decide ✦</button>`;
-
+let _tieCallback=null;
+function showTie(axis,options,callback){
+  _tieCallback=callback;
+  const intro=axis==='class'?'Your choices point to two equal callings. The path forward is yours to name.':'Your blood carries two ancient heritages in equal measure. Choose which runs truer.';
+  document.getElementById('tie-wrap').innerHTML=
+    '<div class="settings-rule" style="margin-bottom:32px"></div>'+
+    '<div class="tie-title">A Divided Fate</div>'+
+    '<div class="tie-sub">'+intro+'</div>'+
+    '<div class="tie-options">'+options.map(o=>'<button class="tie-option" onclick="resolveTie(\''+axis+'\',\''+o.id+'\')"><div class="tie-option-name">'+o.name+'</div><div class="tie-option-desc">'+o.description+'</div></button>').join('')+'</div>'+
+    '<button class="tie-random" onclick="resolveTie(\''+axis+'\',\'__random__\')">Let fate decide &#x2726;</button>';
   showScreen('screen-tie');
 }
 
-function resolveTie(axis, id){
-  const options = axis==='class' ? state._classTiedOptions : state._specTiedOptions;
-  let chosen;
-  if(id==='__random__'){
-    chosen = options[Math.floor(Math.random()*options.length)];
-  } else {
-    chosen = options.find(o=>o.id===id);
-  }
-  if(axis==='class') state.finalClass = chosen;
-  else state.finalSpecies = chosen;
-
-  if(_tieCallback) _tieCallback();
+function resolveTie(axis,id){
+  const options=axis==='class'?flowState._classTiedOptions:flowState._specTiedOptions;
+  const chosen=id==='__random__'?options[Math.floor(Math.random()*options.length)]:options.find(o=>o.id===id);
+  if(axis==='class')flowState.finalClass=chosen;else flowState.finalSpecies=chosen;
+  if(_tieCallback)_tieCallback();
 }
 
-// ── REVEAL ──
 function showReveal(){
-  const s = state.setting;
-  const cls = state.finalClass;
-  const sp = state.finalSpecies;
-  const flavorKey = `${cls.id}_${sp.id}`;
-  const flavor = (s.flavors||{})[flavorKey] || `You have been marked by fate as a ${cls.name} of ${sp.name} heritage. Your legend begins now.`;
-
-  const p = cls.attribute_contribution.physical + sp.attribute_contribution.physical;
-  const m = cls.attribute_contribution.mental + sp.attribute_contribution.mental;
-  const su = cls.attribute_contribution.supernatural + sp.attribute_contribution.supernatural;
-  const maxAttr = Math.max(p, m, su, 1);
-
-  document.getElementById('reveal-wrap').innerHTML = `
-    <div class="reveal-announce">Your fate is sealed</div>
-    <div class="reveal-name">${cls.name}</div>
-    <div class="reveal-species">of ${sp.name} heritage · ${s.meta.name}</div>
-    <div class="reveal-divider"></div>
-    <div class="reveal-flavor">${flavor}</div>
-    <div class="reveal-attrs">
-      <div class="attr-card">
-        <div class="attr-label">Physical</div>
-        <div class="attr-value">${p}</div>
-        <div class="attr-bar"><div class="attr-bar-fill" style="width:${Math.round((p/maxAttr)*100)}%"></div></div>
-      </div>
-      <div class="attr-card">
-        <div class="attr-label">Mental</div>
-        <div class="attr-value">${m}</div>
-        <div class="attr-bar"><div class="attr-bar-fill" style="width:${Math.round((m/maxAttr)*100)}%"></div></div>
-      </div>
-      <div class="attr-card">
-        <div class="attr-label">Supernatural</div>
-        <div class="attr-value">${su}</div>
-        <div class="attr-bar"><div class="attr-bar-fill" style="width:${Math.round((su/maxAttr)*100)}%"></div></div>
-      </div>
-    </div>
-    <div class="reveal-actions">
-      <button class="reveal-btn reveal-btn-primary" onclick="beginGame()">Enter the World</button>
-      <button class="reveal-btn reveal-btn-ghost" onclick="restartFlow()">Try Again</button>
-    </div>`;
-
+  const s=flowState.setting,cls=flowState.finalClass,sp=flowState.finalSpecies;
+  const flavor=(s.flavors[cls.id]||{})[sp.id]||'You have been marked as a '+cls.name+' of '+sp.name+' heritage. Your legend begins now.';
+  const p=cls.attribute_contribution.physical+sp.attribute_contribution.physical;
+  const m=cls.attribute_contribution.mental+sp.attribute_contribution.mental;
+  const su=cls.attribute_contribution.supernatural+sp.attribute_contribution.supernatural;
+  const maxAttr=Math.max(p,m,su,1);
+  document.getElementById('reveal-wrap').innerHTML=
+    '<div class="reveal-announce">Your fate is sealed</div>'+
+    '<div class="reveal-name">'+cls.name+'</div>'+
+    '<div class="reveal-species">of '+sp.name+' heritage \xB7 '+s.meta.name+'</div>'+
+    '<div class="reveal-divider"></div>'+
+    '<div class="reveal-flavor">'+flavor+'</div>'+
+    '<div class="reveal-attrs">'+
+    [['Physical',p],['Mental',m],['Supernatural',su]].map(([n,v])=>'<div class="attr-card"><div class="attr-label">'+n+'</div><div class="attr-value">'+v+'</div><div class="attr-bar"><div class="attr-bar-fill" style="width:'+Math.round((v/maxAttr)*100)+'%"></div></div></div>').join('')+
+    '</div>'+
+    '<div class="reveal-actions">'+
+    '<button class="reveal-btn reveal-btn-primary" onclick="beginGame()">Enter the World</button>'+
+    '<button class="reveal-btn reveal-btn-ghost" onclick="restartFlow()">Try Again</button>'+
+    '</div>';
   showScreen('screen-reveal');
 }
 
+// ═══════════════════════════════════════════
+// GAME INIT
+// ═══════════════════════════════════════════
 function beginGame(){
-  alert(`Game engine coming soon!\n\nYour character: ${state.finalClass.name} (${state.finalSpecies.name})\nReady to idle.`);
+  const setting=flowState.setting,cls=flowState.finalClass,sp=flowState.finalSpecies;
+  const p=cls.attribute_contribution.physical+sp.attribute_contribution.physical;
+  const m=cls.attribute_contribution.mental+sp.attribute_contribution.mental;
+  const s=cls.attribute_contribution.supernatural+sp.attribute_contribution.supernatural;
+  player={
+    setting_id:setting.id,class_id:cls.id,species_id:sp.id,
+    level:1,essence:0,shards:0,currency:0,fragments:0,
+    currency_name:setting.meta.currency_name,
+    attributes:{physical:p,mental:m,supernatural:s},
+    imprints:[],skills:[],equipment:{},inventory:[],companions:[],active_companion:null
+  };
+  computed.dirty=true;
+  const pStats=getComputedStats();
+  combatState.current={vitality:pStats.vitality,focus:pStats.focus};
+  document.getElementById('topbar-char-name').textContent=cls.name+' \xB7 '+sp.name;
+  updateTopbarEconomy();updateSidebarEquipment();updateCombatArena();
+  showScreen('screen-game');saveGame();
+  const tut=setting.tutorial;
+  log(tut.intro_text,'le-system');
+  setTimeout(()=>startCombat(tut.enemy_id,1,true),1200);
 }
 
 function restartFlow(){
-  showScreen('screen-settings');
+  if(combatState.tick)clearInterval(combatState.tick);
+  player=null;computed.dirty=true;pendingLoot=null;
+  flowState={setting:null,currentQ:0,answers:[],classScores:{},specScores:{},finalClass:null,finalSpecies:null};
+  combatState={active:false,round:0,isTutorial:false,enemy:null,enemyDef:null,diffMult:1,current:{vitality:0,focus:0},enemyCurrent:{vitality:0,focus:0},companionCurrent:null,tick:null};
+  clearSave();showScreen('screen-settings');
 }
 
-// ── INIT ──
+// INIT
 renderSettings();
 </script>
 </body>

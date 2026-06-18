@@ -246,3 +246,5 @@ Rarity multipliers apply to: item stat modifiers, sell value (`base_value × mul
 
 1. **Fix Flavors** - we need to work out this system, first determining if it's needed, second. . .what it does.
 2. **Update admin editor** — add missing schema fields and new section editors
+3. **Update combat simulator** — add new elements into combat simulation
+4. **Update README.md** - make sure it's in tune

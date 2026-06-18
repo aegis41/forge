@@ -7,8 +7,8 @@ Forge is a config-driven RPG idle game. Players complete a personality interview
 The project has three components:
 
 - `game/index.html` — the player-facing game
-- `admin/index.html` — the setting editor / scenario builder
-- `poc/` — proof of concept files for isolated feature work
+- `admin/index.html` — the setting editor / scenario builder !!TODO:PRIORITY-HIGH!!
+- `sim/index.html` — a combat simulator which will need some updates soon
 
 ---
 
@@ -91,12 +91,12 @@ These were resolved through discussion and should not be re-opened without expli
 **Economy — four currencies:**
 - Essence — earned from combat wins, used for level and skill purchases
 - Shards — rare drops (~15% chance), used to buy imprints
-- Setting currency (Gold, Dread Coin, etc.) — from selling loot, used for companions
+- Setting currency (Gold, Infamy, etc.) — from selling loot, used for companions
 - Fragments — from salvaging gear, 10,000 auto-converts to 1 Shard with a toast notification
 
 **Loot flow** — empty slot: auto-equip with toast notification. Occupied slot at level 1–4: four-option modal (Equip / Store / Sell / Salvage) with side-by-side stat comparison and sell/salvage values shown. Level 5+: loot automation config (not yet built).
 
-**Flavors** — keyed as `class_id + '_' + species_id` (flat object, not nested matrix).
+**Flavors** — Needs to be reworked. TODO
 
 **Gear** — flat array with `slot` property embedded in each item, not keyed by slot.
 

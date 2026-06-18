@@ -13,7 +13,6 @@ forge/
 ├── admin/
 │   └── index.html        — setting editor (partially outdated)
 ├── poc/
-│   └── game_screen.html  — game screen layout mockup (in progress)
 ├── sim/
 │   └── index.html        — combat simulator (exists, not recently touched)
 ├── docs/
@@ -39,21 +38,8 @@ forge/
 - The game screen itself — it is a bare `<div>` with a Hello World heading
 - No combat, no economy, no inventory, no companions
 
-**Known issue in the file:**
-The `screen-game` div uses `class="class"` instead of `id="screen-game"`. The developer patched `beginGame()` to call `showScreen('screen-game')` directly, which currently works by luck. This should be corrected to `<div class="screen" id="screen-game">` before building on it.
-
-**Known issue in `renderSettings()`:**
-The function contains a nested template literal on line 388 that is a parser hazard:
-```js
-onclick="${locked?'':` selectSetting('${s.id}')`}"
-```
-This has caused the entire script to silently fail in multiple iterations. It must be replaced with string concatenation before any further edits touch this function. The safe form is:
-```js
-const click = locked ? '' : ' onclick="selectSetting(\'' + s.id + '\')"';
-```
-
 **Flavor key format:**
-The game file uses flat keys: `flavors['warrior_human']`. This differs from earlier design notes that described a nested matrix. The flat format is what is implemented and should be treated as canonical.
+The game file uses flat keys: `flavors['warrior_human']`. This differs from earlier design notes that described a nested matrix. This needs to be fixed. TODO
 
 ---
 
@@ -92,21 +78,6 @@ Data model issues:
 
 ---
 
-## poc/ — current state
-
-`game_screen.html` is being built to establish the game screen layout and visual direction before transplanting into `game/index.html`. Three aesthetic directions were produced as inline visualiser mockups but no standalone file exists yet.
-
-The layout is agreed:
-- Left column: Character block (top) + Loot/inventory (bottom)
-- Center: Arena (combat) + Equipment bar pinned to bottom
-- Right inner: Battle Stats (top) + Log (bottom)
-- Right outer: Skills / Companions / Imprints stacked vertically
-- Topbar: present but no content planned for it yet
-
-Visual direction: not yet chosen.
-
----
-
 ## Setting schema — current canonical version (v2.0.0)
 
 This is the designed target. The admin editor should produce this shape.
@@ -135,7 +106,7 @@ This is the designed target. The admin editor should produce this shape.
     ],
     "species": [ /* same shape as classes */ ],
     "flavors": {
-      "class_id_species_id": "flavor text string"
+      "class_id_species_id": "flavor text string" // TODO:PRIORITY-HIGH this structure needs to be fixed. This might be the first thing we need to work through.
     },
     "tutorial": {
       "enemy_id": "string",
@@ -271,20 +242,7 @@ Rarity multipliers apply to: item stat modifiers, sell value (`base_value × mul
 
 ---
 
-## Active branches (as of end of session)
-
-| Branch | Status |
-|---|---|
-| `main` | Working — interview flow complete, Hello World game screen |
-| `feature/game-screen-design` | Open — poc work, no commits yet |
-
----
-
 ## Immediate next steps (in order)
 
-1. **Fix `screen-game` div** — change `class="class"` to `class="screen" id="screen-game"` in `game/index.html`
-2. **Fix `renderSettings()` nested backtick** — replace with string concatenation
-3. **Build `poc/game_screen.html`** — static layout with chosen visual direction
-4. **Decide visual direction** — three mockup directions exist, none chosen
-5. **Transplant game screen into `game/index.html`** — once poc is proven in browser
-6. **Update admin editor** — add missing schema fields and new section editors
+1. **Fix Flavors** - we need to work out this system, first determining if it's needed, second. . .what it does.
+2. **Update admin editor** — add missing schema fields and new section editors

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Forge — Combat Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c08;--bg2:#0d120d;--bg3:#121812;--bg4:#1a221a;
+  --border:#1e2e1e;--border2:#2a3e2a;
+  --green:#3ddc84;--green-dim:#1a4a30;
+  --amber:#ffb830;--amber-dim:#3d2c00;
+  --red:#ff4444;--red-dim:#3d0000;
+  --blue:#4499ff;--blue-dim:#001a3d;
+  --purple:#bb88ff;--purple-dim:#2a0055;
+  --cyan:#44ddff;--cyan-dim:#003d4a;
+  --text:#c8e8c8;--text2:#6a8a6a;--text3:#3a5a3a;
+  --mono:'Share Tech Mono',monospace;--display:'Orbitron',monospace;
+  --scanline:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:12px;overflow:hidden}
+body{display:flex;flex-direction:column}
+
+.topbar{background:var(--bg2);border-bottom:2px solid var(--green-dim);padding:0 16px;height:44px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.logo{font-family:var(--display);font-size:13px;font-weight:700;color:var(--green);letter-spacing:3px}
+.topbar-sub{font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;margin-left:auto}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.main{display:grid;grid-template-columns:300px 1fr 300px;flex:1;overflow:hidden;min-height:0}
+
+/* ── PANELS ── */
+.panel{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.panel.right{border-right:none;border-left:1px solid var(--border)}
+.ph{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--bg3)}
+.ph-title{font-family:var(--display);font-size:9px;font-weight:600;letter-spacing:2px;color:var(--green);text-transform:uppercase}
+.pb{padding:12px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
+
+/* ── TABS ── */
+.tab-bar{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.tab{flex:1;padding:7px 4px;text-align:center;font-family:var(--display);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--green);border-bottom-color:var(--green)}
+.tab-content{display:none;flex:1;overflow-y:auto;padding:12px;flex-direction:column;gap:8px;min-height:0}
+.tab-content.active{display:flex}
+
+/* ── FORM ELEMENTS ── */
+.fl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:3px}
+select,input[type=number]{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:11px;padding:5px 8px;width:100%;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none}
+select:focus,input[type=number]:focus{border-color:var(--green)}
+select option{background:var(--bg3)}
+input[type=number]::-webkit-inner-spin-button{opacity:.4}
+
+/* ── STAT CARDS ── */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.sc{background:var(--bg3);border:1px solid var(--border);padding:7px 8px;cursor:pointer;transition:border .15s;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;inset:0;background:var(--scanline);pointer-events:none}
+.sc:hover{border-color:var(--green-dim)}
+.sc-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:2px}
+.sc-val{font-family:var(--display);font-size:14px;font-weight:700;color:var(--green)}
+.sc-val.amber{color:var(--amber)}.sc-val.blue{color:var(--blue)}.sc-val.purple{color:var(--purple)}.sc-val.red{color:var(--red)}.sc-val.cyan{color:var(--cyan)}
+
+/* ── ATTR BARS ── */
+.attr-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border)}
+.attr-row:last-child{border-bottom:none}
+.attr-name{font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--text2);min-width:72px}
+.attr-sub{font-size:9px;color:var(--text3);min-width:60px}
+.attr-bar-track{flex:1;height:5px;background:var(--bg4)}
+.attr-bar-fill{height:100%;background:var(--green);transition:width .3s}
+.attr-bar-fill.amber{background:var(--amber)}.attr-bar-fill.blue{background:var(--blue)}
+.attr-val{font-family:var(--display);font-size:10px;color:var(--green);min-width:20px;text-align:right}
+
+/* ── SECTION DIVIDER ── */
+.sd{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:3px 0;border-bottom:1px solid var(--border);margin-bottom:4px}
+
+/* ── TOGGLE ITEMS (imprints/skills) ── */
+.toggle-list{display:flex;flex-direction:column;gap:3px}
+.toggle-item{background:var(--bg3);border:1px solid var(--border);padding:6px 8px;cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.toggle-item:hover{border-color:var(--green-dim)}
+.toggle-item.active{border-color:var(--green);background:rgba(61,220,132,0.04)}
+.toggle-item.disabled-item{opacity:.4;cursor:not-allowed}
+.ti-name{font-size:10px;color:var(--text)}
+.ti-desc{font-size:9px;color:var(--text2);margin-top:1px;line-height:1.4}
+.ti-cost{font-size:9px;color:var(--text3);white-space:nowrap;text-align:right}
+.ti-cost.active{color:var(--green)}
+.ti-effect{font-size:9px;color:var(--amber);margin-top:1px}
+
+/* ── EQUIPMENT SLOTS ── */
+.eq-slot{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.eq-slot-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:4px}
+.eq-slot-row{display:flex;gap:4px}
+.eq-slot-row select{flex:1}
+.rarity-pip{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.r-common{background:#6a8a6a}.r-uncommon{background:#4499ff}.r-rare{background:#bb88ff}.r-legendary{background:#ffb830}
+
+/* ── CALC PANEL ── */
+.calc-panel{background:var(--bg3);border:1px solid var(--border);padding:10px;font-size:10px;line-height:1.7;flex-shrink:0;min-height:100px;max-height:220px;overflow-y:auto}
+.calc-line{color:var(--text2);padding:1px 0}
+.calc-line.heading{color:var(--green);font-family:var(--display);font-size:9px;letter-spacing:1px;border-bottom:1px solid var(--border);margin-bottom:4px;padding-bottom:3px}
+.calc-line.result{color:var(--amber);font-family:var(--display)}
+.calc-line.note{color:var(--text3);font-size:9px}
+.calc-line.hit{color:var(--green)}.calc-line.miss{color:var(--text3)}.calc-line.crit{color:var(--amber)}
+
+/* ── COMBAT CENTER ── */
+.combat-center{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);min-height:0}
+.arena{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;gap:10px;position:relative;min-height:0}
+.arena::before{content:'';position:absolute;inset:0;background:var(--scanline);pointer-events:none;opacity:.5}
+.combatant-row{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;width:100%;max-width:660px;align-items:center;position:relative;z-index:1}
+.combatant{background:var(--bg2);border:1px solid var(--border2);padding:12px}
+.combatant.player{border-color:var(--green-dim)}.combatant.enemy{border-color:var(--red-dim)}
+.combatant-name{font-family:var(--display);font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.combatant-name.green{color:var(--green)}.combatant-name.red{color:var(--red)}
+.hp-bar-wrap{margin-bottom:5px}
+.hp-label{font-size:9px;color:var(--text2);display:flex;justify-content:space-between;margin-bottom:2px}
+.hp-track{height:8px;background:var(--bg4);border:1px solid var(--border)}
+.hp-fill{height:100%;transition:width .4s}
+.hp-fill.green{background:var(--green)}.hp-fill.red{background:var(--red)}.hp-fill.amber{background:var(--amber)}
+.focus-track{height:4px;background:var(--bg4);border:1px solid var(--border);margin-bottom:6px}
+.focus-fill{height:100%;background:var(--blue);transition:width .4s}
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;font-size:9px}
+.mini-stat{background:var(--bg3);padding:3px 4px;text-align:center}
+.mini-stat-label{color:var(--text3)}.mini-stat-val{color:var(--text);font-weight:700}
+.vs-badge{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text3);text-align:center}
+
+.combat-controls{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;background:var(--bg2);align-items:center}
+.btn{font-family:var(--display);font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;border:1px solid;cursor:pointer;transition:all .15s;background:none}
+.btn-green{color:var(--green);border-color:var(--green-dim)}.btn-green:hover{background:var(--green-dim)}.btn-green:disabled{opacity:.3;cursor:not-allowed}
+.btn-amber{color:var(--amber);border-color:var(--amber-dim)}.btn-amber:hover{background:var(--amber-dim)}.btn-amber:disabled{opacity:.3;cursor:not-allowed}
+.btn-red{color:var(--red);border-color:var(--red-dim)}.btn-red:hover{background:var(--red-dim)}
+.btn-blue{color:var(--blue);border-color:var(--blue-dim)}.btn-blue:hover{background:var(--blue-dim)}.btn-blue:disabled{opacity:.3;cursor:not-allowed}
+.round-counter{font-size:10px;color:var(--text2);letter-spacing:1px;margin-left:auto}
+
+/* ── LOG ── */
+.log-entries{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:2px;min-height:0}
+.le{font-size:10px;line-height:1.5;padding:2px 5px;border-left:2px solid transparent;cursor:pointer;transition:background .1s}
+.le:hover{background:rgba(255,255,255,0.03)}
+.le.round{border-left-color:var(--text3);color:var(--text3);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-top:3px;cursor:default}
+.le.hit{border-left-color:var(--green);color:var(--text)}
+.le.miss{border-left-color:var(--text3);color:var(--text2)}
+.le.crit{border-left-color:var(--amber);color:var(--amber)}
+.le.death{border-left-color:var(--red);color:var(--red);font-weight:700}
+.le.info{border-left-color:var(--blue);color:var(--blue)}
+.le.reward{border-left-color:var(--purple);color:var(--purple)}
+.le.skill{border-left-color:var(--cyan);color:var(--cyan)}
+.le.system{border-left-color:var(--text3);color:var(--text3);font-size:9px;cursor:default}
+
+/* ── OUTCOME ── */
+.outcome-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,12,8,0.93);z-index:10;flex-direction:column;gap:10px;opacity:0;pointer-events:none;transition:opacity .3s}
+.outcome-overlay.show{opacity:1;pointer-events:all}
+.outcome-title{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:4px}
+.outcome-title.win{color:var(--green)}.outcome-title.lose{color:var(--red)}
+.outcome-sub{font-size:11px;color:var(--text2);letter-spacing:2px}
+.outcome-rewards{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;justify-content:center}
+.reward-pill{background:var(--bg3);border:1px solid var(--purple-dim);color:var(--purple);padding:5px 12px;font-size:10px;letter-spacing:1px;cursor:pointer;transition:border .15s}
+.reward-pill:hover{border-color:var(--purple)}
+.reward-pill.gear{border-color:var(--amber-dim);color:var(--amber)}
+.reward-pill.gear:hover{border-color:var(--amber)}
+
+/* ── ENEMY CONFIG ── */
+.enemy-config{padding:10px;border-top:1px solid var(--border);flex-shrink:0}
+.enemy-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.enemy-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;font-size:9px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">⬡ FORGE</div>
+  <div class="topbar-sub">Combat Simulator v0.2</div>
+  <div class="status-dot"></div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT PANEL: Character + Equipment tabs -->
+  <div class="panel">
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchTab('left','char')">Character</div>
+      <div class="tab" onclick="switchTab('left','equip')">Equipment</div>
+    </div>
+
+    <!-- CHARACTER TAB -->
+    <div class="tab-content active" id="left-char">
+      <div class="sd">Identity</div>
+      <div><div class="fl">Setting</div><select id="sel-setting" onchange="onSettingChange()"><option value="fantasy">Sword &amp; Sorcery</option><option value="horror">Horror</option></select></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div><div class="fl">Class</div><select id="sel-class" onchange="onBuildChange()"></select></div>
+        <div><div class="fl">Species</div><select id="sel-species" onchange="onBuildChange()"></select></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px">
+        <div><div class="fl">Level</div><input type="number" id="inp-level" min="1" max="100" value="1" oninput="onBuildChange()"/></div>
+        <div><div class="fl">Essence</div><input type="number" id="inp-essence" value="0" readonly style="color:var(--text2)"/></div>
+        <div><div class="fl">Shards</div><input type="number" id="inp-shards" value="0" readonly style="color:var(--text2)"/></div>
+      </div>
+
+      <div class="sd">Attributes</div>
+      <div id="attr-display"></div>
+
+      <div class="sd">Combat Stats <span style="color:var(--text3);font-size:8px">(click to inspect)</span></div>
+      <div class="stat-grid" id="stat-display"></div>
+
+      <div class="sd">Imprints</div>
+      <div class="toggle-list" id="imprint-list"></div>
+    </div>
+
+    <!-- EQUIPMENT TAB -->
+    <div class="tab-content" id="left-equip">
+      <div class="sd">Gear Slots</div>
+      <div id="equip-slots"></div>
+      <div class="sd" style="margin-top:4px">Inventory</div>
+      <div style="font-size:9px;color:var(--text3);margin-bottom:4px">Items earned in combat. Click to equip.</div>
+      <div id="inventory-list" style="display:flex;flex-direction:column;gap:3px"></div>
+    </div>
+  </div>
+
+  <!-- CENTER: Calc + Arena -->
+  <div class="combat-center">
+
+    <!-- CALC PANEL -->
+    <div style="padding:10px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <div class="ph" style="margin-bottom:6px;border:none;padding:0;background:none">
+        <i class="ti ti-math" aria-hidden="true" style="font-size:12px;color:var(--green)"></i>
+        <span class="ph-title">Calculations</span>
+        <span style="font-size:9px;color:var(--text3);margin-left:6px">Click a stat or log entry to inspect</span>
+      </div>
+      <div class="calc-panel" id="calc-panel">
+        <div class="calc-line note">// select a combat stat or click a log entry to see the math</div>
+      </div>
+    </div>
+
+    <!-- ARENA -->
+    <div class="arena" id="arena">
+      <div class="outcome-overlay" id="outcome-overlay">
+        <div class="outcome-title" id="outcome-title">VICTORY</div>
+        <div class="outcome-sub" id="outcome-sub"></div>
+        <div class="outcome-rewards" id="outcome-rewards"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-green" onclick="resetCombat()">New Combat</button>
+        </div>
+      </div>
+
+      <div class="combatant-row">
+        <div class="combatant player">
+          <div class="combatant-name green" id="player-name">—</div>
+          <div class="hp-bar-wrap">
+            <div class="hp-label"><span>VITALITY</span><span id="player-hp-text">—</span></div>
+            <div class="hp-track"><div class="hp-fill green" id="player-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="hp-label" style="font-size:9px"><span style="color:var(--blue)">FOCUS</span><span id="player-focus-text" style="color:var(--blue)">—</span></div>
+          <div class="focus-track" style="margin-bottom:6px"><div class="focus-fill" id="player-focus-bar" style="width:100%"></div></div>
+          <div class="mini-stats">
+            <div class="mini-stat"><div class="mini-stat-label">PWR</div><div class="mini-stat-val" id="ps-power">—</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">EVD</div><div class="mini-stat-val" id="ps-evade">—</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">BLK</div><div class="mini-stat-val" id="ps-block">—</div></div>
+          </div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="combatant enemy">
+          <div class="combatant-name red" id="enemy-name">—</div>
+          <div class="hp-bar-wrap">
+            <div class="hp-label"><span>VITALITY</span><span id="enemy-hp-text">—</span></div>
+            <div class="hp-track"><div class="hp-fill red" id="enemy-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="hp-label" style="font-size:9px"><span style="color:var(--blue)">FOCUS</span><span id="enemy-focus-text" style="color:var(--blue)">—</span></div>
+          <div class="focus-track" style="margin-bottom:6px"><div class="focus-fill" id="enemy-focus-bar" style="width:100%"></div></div>
+          <div class="mini-stats">
+            <div class="mini-stat"><div class="mini-stat-label">PWR</div><div class="mini-stat-val" id="es-power">—</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">EVD</div><div class="mini-stat-val" id="es-evade">—</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">BLK</div><div class="mini-stat-val" id="es-block">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="combat-controls">
+      <button class="btn btn-green" id="btn-start" onclick="startCombat()">Start</button>
+      <button class="btn btn-amber" id="btn-step" onclick="stepRound()" disabled>Step</button>
+      <button class="btn btn-blue" id="btn-auto" onclick="autoCombat()" disabled>Auto</button>
+      <button class="btn btn-red" onclick="resetCombat()">Reset</button>
+      <div class="round-counter" id="round-counter">Round —</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: Skills + Log tabs -->
+  <div class="panel right">
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchTab('right','skills')">Skills</div>
+      <div class="tab" onclick="switchTab('right','log')">Log</div>
+      <div class="tab" onclick="switchTab('right','enemy')">Enemy</div>
+    </div>
+
+    <!-- SKILLS TAB -->
+    <div class="tab-content active" id="right-skills">
+      <div class="sd">Available Skills <span style="color:var(--text3);font-size:8px">(toggle to equip)</span></div>
+      <div class="toggle-list" id="skill-list"></div>
+    </div>
+
+    <!-- LOG TAB -->
+    <div class="tab-content" id="right-log" style="padding:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--border);flex-shrink:0">
+        <span style="font-size:9px;color:var(--text3)">click entry to inspect</span>
+        <button onclick="clearLog()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:10px;font-family:var(--mono)">clear</button>
+      </div>
+      <div class="log-entries" id="log-entries">
+        <div class="le system">// awaiting combat initialization</div>
+      </div>
+    </div>
+
+    <!-- ENEMY TAB -->
+    <div class="tab-content" id="right-enemy">
+      <div class="sd">Enemy Config</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+        <div><div class="fl">Type</div><select id="sel-enemy" onchange="onEnemyChange()"></select></div>
+        <div><div class="fl">Difficulty</div>
+          <select id="sel-diff" onchange="onEnemyChange()">
+            <option value="0.6">Weak</option><option value="1" selected>Normal</option>
+            <option value="1.5">Strong</option><option value="2.2">Elite</option>
+          </select>
+        </div>
+      </div>
+      <div class="sd">Enemy Stats</div>
+      <div id="enemy-stat-preview" class="enemy-preview"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+
+const GEAR = {
+  fantasy:{
+    head:[
+      {id:'iron_helm',name:'Iron Helm',rarity:'common',mods:{physical:1}},
+      {id:'studded_cap',name:'Studded Cap',rarity:'uncommon',mods:{physical:2,mental:1}},
+      {id:'mages_circlet',name:"Mage's Circlet",rarity:'rare',mods:{mental:4,supernatural:2}},
+      {id:'crown_ancients',name:'Crown of the Ancients',rarity:'legendary',mods:{mental:5,supernatural:5}}
+    ],
+    chest:[
+      {id:'leather_vest',name:'Leather Vest',rarity:'common',mods:{physical:2}},
+      {id:'chain_shirt',name:'Chain Shirt',rarity:'uncommon',mods:{physical:3,supernatural:1}},
+      {id:'arcane_robe',name:'Arcane Robe',rarity:'rare',mods:{mental:3,supernatural:4}},
+      {id:'dragonscale',name:'Dragonscale Plate',rarity:'legendary',mods:{physical:6,supernatural:4}}
+    ],
+    back:[
+      {id:'wool_cloak',name:'Wool Cloak',rarity:'common',mods:{mental:1}},
+      {id:'shadow_cloak',name:'Shadow Cloak',rarity:'uncommon',mods:{mental:2,supernatural:2}},
+      {id:'elven_mantle',name:'Elven Mantle',rarity:'rare',mods:{mental:3,supernatural:4}},
+      {id:'cloak_shifting',name:'Cloak of Shifting',rarity:'legendary',mods:{mental:4,supernatural:6}}
+    ],
+    hands:[
+      {id:'work_gloves',name:'Work Gloves',rarity:'common',mods:{physical:1}},
+      {id:'archer_bracers',name:"Archer's Bracers",rarity:'uncommon',mods:{physical:2,mental:1}},
+      {id:'spellweave_gloves',name:'Spellweave Gloves',rarity:'rare',mods:{mental:4,supernatural:2}},
+      {id:'gauntlets_fury',name:'Gauntlets of Fury',rarity:'legendary',mods:{physical:5,supernatural:3}}
+    ],
+    right_weapon:[
+      {id:'iron_sword',name:'Iron Sword',rarity:'common',mods:{physical:2}},
+      {id:'silver_dagger',name:'Silver Dagger',rarity:'uncommon',mods:{physical:2,supernatural:2}},
+      {id:'staff_embers',name:'Staff of Embers',rarity:'rare',mods:{mental:3,supernatural:4}},
+      {id:'excalibrant',name:'Excalibrant',rarity:'legendary',mods:{physical:5,mental:3,supernatural:2}}
+    ],
+    right_ring:[
+      {id:'copper_band',name:'Copper Band',rarity:'common',mods:{mental:1}},
+      {id:'ring_focus',name:'Ring of Focus',rarity:'uncommon',mods:{mental:3}},
+      {id:'signet_power',name:'Signet of Power',rarity:'rare',mods:{physical:3,mental:3}},
+      {id:'eternal_ring',name:'Eternal Ring',rarity:'legendary',mods:{physical:4,mental:4,supernatural:2}}
+    ],
+    left_weapon:[
+      {id:'wooden_shield',name:'Wooden Shield',rarity:'common',mods:{physical:1}},
+      {id:'buckler',name:'Buckler',rarity:'uncommon',mods:{physical:2,mental:1}},
+      {id:'tome_shadows',name:'Tome of Shadows',rarity:'rare',mods:{mental:3,supernatural:4}},
+      {id:'aegis_fallen',name:'Aegis of the Fallen',rarity:'legendary',mods:{physical:4,supernatural:5}}
+    ],
+    left_ring:[
+      {id:'tin_band',name:'Tin Band',rarity:'common',mods:{supernatural:1}},
+      {id:'ring_warding',name:'Ring of Warding',rarity:'uncommon',mods:{supernatural:3}},
+      {id:'signet_evasion',name:'Signet of Evasion',rarity:'rare',mods:{mental:2,supernatural:4}},
+      {id:'ring_archmage',name:'Ring of the Archmage',rarity:'legendary',mods:{mental:5,supernatural:5}}
+    ],
+    legs:[
+      {id:'rough_trousers',name:'Rough Trousers',rarity:'common',mods:{physical:1}},
+      {id:'leather_greaves',name:'Leather Greaves',rarity:'uncommon',mods:{physical:3}},
+      {id:'chainmail_legs',name:'Chainmail Leggings',rarity:'rare',mods:{physical:4,supernatural:2}},
+      {id:'legs_colossus',name:'Legs of the Colossus',rarity:'legendary',mods:{physical:7,supernatural:3}}
+    ],
+    feet:[
+      {id:'worn_boots',name:'Worn Boots',rarity:'common',mods:{physical:1}},
+      {id:'ranger_boots',name:"Ranger's Boots",rarity:'uncommon',mods:{physical:1,mental:2}},
+      {id:'boots_silence',name:'Boots of Silence',rarity:'rare',mods:{mental:3,supernatural:3}},
+      {id:'quickstep',name:'Quickstep Sabatons',rarity:'legendary',mods:{physical:3,mental:4,supernatural:3}}
+    ]
+  },
+  horror:{
+    head:[
+      {id:'cracked_mask',name:'Cracked Mask',rarity:'common',mods:{physical:1}},
+      {id:'gas_mask',name:'Gas Mask',rarity:'uncommon',mods:{physical:2,mental:1}},
+      {id:'occultist_hood',name:"Occultist's Hood",rarity:'rare',mods:{mental:4,supernatural:3}},
+      {id:'hollow_crown',name:'The Hollow Crown',rarity:'legendary',mods:{mental:5,supernatural:6}}
+    ],
+    chest:[
+      {id:'torn_jacket',name:'Torn Jacket',rarity:'common',mods:{physical:1}},
+      {id:'kevlar',name:'Kevlar Vest',rarity:'uncommon',mods:{physical:4}},
+      {id:'ritual_coat',name:'Ritual Coat',rarity:'rare',mods:{mental:2,supernatural:5}},
+      {id:'skin_beast',name:'Skin of the Beast',rarity:'legendary',mods:{physical:5,supernatural:5}}
+    ],
+    back:[
+      {id:'tattered_cape',name:'Tattered Cape',rarity:'common',mods:{mental:1}},
+      {id:'hunter_wrap',name:"Hunter's Wrap",rarity:'uncommon',mods:{physical:2,mental:2}},
+      {id:'shadowskin',name:'Shadowskin Cloak',rarity:'rare',mods:{mental:3,supernatural:4}},
+      {id:'mantle_night',name:'Mantle of Endless Night',rarity:'legendary',mods:{mental:5,supernatural:6}}
+    ],
+    hands:[
+      {id:'rubber_gloves',name:'Rubber Gloves',rarity:'common',mods:{physical:1}},
+      {id:'trauma_wraps',name:'Trauma Wraps',rarity:'uncommon',mods:{physical:3}},
+      {id:'clawed_gauntlets',name:'Clawed Gauntlets',rarity:'rare',mods:{physical:4,supernatural:2}},
+      {id:'hands_revenant',name:'Hands of the Revenant',rarity:'legendary',mods:{physical:4,supernatural:5}}
+    ],
+    right_weapon:[
+      {id:'rusty_knife',name:'Rusty Knife',rarity:'common',mods:{physical:2}},
+      {id:'hunting_rifle',name:'Hunting Rifle',rarity:'uncommon',mods:{physical:3,mental:1}},
+      {id:'bone_cleaver',name:'Bone Cleaver',rarity:'rare',mods:{physical:5,supernatural:2}},
+      {id:'last_word',name:'The Last Word',rarity:'legendary',mods:{physical:6,mental:2,supernatural:2}}
+    ],
+    right_ring:[
+      {id:'iron_ring',name:'Iron Ring',rarity:'common',mods:{physical:1}},
+      {id:'ring_dread',name:'Ring of Dread',rarity:'uncommon',mods:{supernatural:3}},
+      {id:'signet_hunt',name:'Signet of the Hunt',rarity:'rare',mods:{physical:2,mental:3}},
+      {id:'ouroboros',name:'Ouroboros Band',rarity:'legendary',mods:{physical:3,mental:3,supernatural:4}}
+    ],
+    left_weapon:[
+      {id:'trash_lid',name:'Trash Lid Shield',rarity:'common',mods:{physical:1}},
+      {id:'riot_shield',name:'Riot Shield',rarity:'uncommon',mods:{physical:4}},
+      {id:'cursed_tome',name:'Cursed Tome',rarity:'rare',mods:{mental:3,supernatural:4}},
+      {id:'shroud_agony',name:'Shroud of Agony',rarity:'legendary',mods:{physical:2,supernatural:8}}
+    ],
+    left_ring:[
+      {id:'cracked_band',name:'Cracked Band',rarity:'common',mods:{supernatural:1}},
+      {id:'ring_silence',name:'Ring of Silence',rarity:'uncommon',mods:{mental:2,supernatural:2}},
+      {id:'signet_abyss',name:'Signet of the Abyss',rarity:'rare',mods:{mental:2,supernatural:5}},
+      {id:'ring_undying',name:'Ring of the Undying',rarity:'legendary',mods:{supernatural:9}}
+    ],
+    legs:[
+      {id:'torn_jeans',name:'Torn Jeans',rarity:'common',mods:{physical:1}},
+      {id:'cargo_pants',name:'Cargo Pants',rarity:'uncommon',mods:{physical:2,mental:1}},
+      {id:'reinforced_legs',name:'Reinforced Leggings',rarity:'rare',mods:{physical:5}},
+      {id:'legs_stalker',name:'Legs of the Stalker',rarity:'legendary',mods:{physical:4,mental:3,supernatural:3}}
+    ],
+    feet:[
+      {id:'cracked_sneakers',name:'Cracked Sneakers',rarity:'common',mods:{physical:1}},
+      {id:'combat_boots',name:'Combat Boots',rarity:'uncommon',mods:{physical:3}},
+      {id:'wraith_treads',name:'Wraith Treads',rarity:'rare',mods:{mental:2,supernatural:4}},
+      {id:'boots_void',name:'Boots of the Void',rarity:'legendary',mods:{mental:4,supernatural:5}}
+    ]
+  }
+};
+
+const SLOT_LABELS={head:'Head',chest:'Chest',back:'Back',hands:'Hands',right_weapon:'Right Hand (Weapon)',right_ring:'Right Hand (Ring)',left_weapon:'Left Hand (Weapon)',left_ring:'Left Hand (Ring)',legs:'Legs',feet:'Feet'};
+const SLOTS=Object.keys(SLOT_LABELS);
+
+const SKILLS={
+  fantasy:[
+    {id:'shield_bash',name:'Shield Bash',cost:8,desc:'A brutal strike that staggers the enemy.',effect:'Power +40% this round',mods:{self:{power_pct:0.4}}},
+    {id:'arcane_bolt',name:'Arcane Bolt',cost:12,desc:'Raw magical force erupts from your hands.',effect:'Power +60% this round',mods:{self:{power_pct:0.6}}},
+    {id:'shadow_step',name:'Shadow Step',cost:10,desc:'You slip between moments, untouchable.',effect:'Evade +50% this round',mods:{self:{evade_flat:50}}},
+    {id:'battle_cry',name:'Battle Cry',cost:6,desc:"Your voice alone breaks their resolve.",effect:'Enemy Block −30% this round',mods:{enemy:{block_pct:-0.3}}},
+    {id:'iron_stance',name:'Iron Stance',cost:5,desc:'You root yourself and dare them to hit you.',effect:'Block +50% this round',mods:{self:{block_pct:0.5}}},
+    {id:'arcane_shield',name:'Arcane Shield',cost:14,desc:'A shell of pure force wraps around you.',effect:'Soak +25% this round',mods:{self:{soak_flat:25}}}
+  ],
+  horror:[
+    {id:'predatory_strike',name:'Predatory Strike',cost:8,desc:'You hit where it hurts most.',effect:'Power +50% this round',mods:{self:{power_pct:0.5}}},
+    {id:'blood_frenzy',name:'Blood Frenzy',cost:10,desc:'Reckless aggression, devastating and dangerous.',effect:'Power +35%, Block −20%',mods:{self:{power_pct:0.35,block_pct:-0.2}}},
+    {id:'dead_weight',name:'Dead Weight',cost:6,desc:'You simply absorb it.',effect:'Soak +30% this round',mods:{self:{soak_flat:30}}},
+    {id:'vanish',name:'Vanish',cost:12,desc:'You are not there when the blow lands.',effect:'Evade +60% this round',mods:{self:{evade_flat:60}}},
+    {id:'death_rattle',name:'Death Rattle',cost:5,desc:"Something in your presence breaks their nerve.",effect:'Enemy Power −25%',mods:{enemy:{power_pct:-0.25}}},
+    {id:'pack_instinct',name:'Pack Instinct',cost:8,desc:'Every sense sharpens to a point.',effect:'Block +40%, Evade +20%',mods:{self:{block_pct:0.4,evade_flat:20}}}
+  ]
+};
+
+const BASE_IMPRINTS=[
+  {id:'iron_hide',name:'Iron Hide',desc:'Soak draws from Supernatural as well.',cost:1,mods:[{stat:'soak',op:'add_attr_pct',attr:'supernatural',val:0.02}]},
+  {id:'iron_will',name:'Iron Will',desc:'Focus gains from Physical resilience.',cost:1,mods:[{stat:'focus',op:'add_attr_pct',attr:'physical',val:1}]},
+  {id:'predator',name:'Predator',desc:'Power gains 25% of Mental.',cost:1,mods:[{stat:'power',op:'add_attr_pct',attr:'mental',val:0.25}]},
+  {id:'ghost_step',name:'Ghost Step',desc:'Evade gains 30% of Physical.',cost:1,mods:[{stat:'evade',op:'add_attr_pct',attr:'physical',val:0.30}]},
+  {id:'undying',name:'Undying',desc:'Vitality gains from Supernatural × 3.',cost:2,mods:[{stat:'vitality',op:'add_attr_pct',attr:'supernatural',val:3}]},
+  {id:'arcane_body',name:'Arcane Body',desc:'Soak Physical contribution replaced by Supernatural.',cost:2,mods:[{stat:'soak',op:'replace_attr',from:'physical',to:'supernatural'}]}
+];
+
+const SETTINGS_DATA={
+  fantasy:{
+    name:'Sword & Sorcery',
+    classes:[
+      {id:'warrior',name:'Warrior',ac:{physical:8,mental:3,supernatural:1}},
+      {id:'mage',name:'Mage',ac:{physical:2,mental:5,supernatural:8}},
+      {id:'rogue',name:'Rogue',ac:{physical:5,mental:6,supernatural:2}}
+    ],
+    species:[
+      {id:'human',name:'Human',ac:{physical:3,mental:4,supernatural:2}},
+      {id:'elf',name:'Elf',ac:{physical:2,mental:3,supernatural:6}},
+      {id:'dwarf',name:'Dwarf',ac:{physical:6,mental:3,supernatural:1}}
+    ],
+    enemies:[
+      {id:'goblin',name:'Goblin',p:4,m:2,s:1},
+      {id:'orc',name:'Orc',p:8,m:2,s:2},
+      {id:'skeleton',name:'Skeleton',p:5,m:1,s:4},
+      {id:'dragon',name:'Dragon',p:14,m:6,s:10}
+    ]
+  },
+  horror:{
+    name:'Horror',
+    classes:[
+      {id:'stalker',name:'Stalker',ac:{physical:2,mental:6,supernatural:4}},
+      {id:'brawler',name:'Brawler',ac:{physical:8,mental:2,supernatural:2}},
+      {id:'tank',name:'Tank',ac:{physical:6,mental:2,supernatural:5}}
+    ],
+    species:[
+      {id:'vampire',name:'Vampire',ac:{physical:2,mental:5,supernatural:7}},
+      {id:'werewolf',name:'Werewolf',ac:{physical:7,mental:3,supernatural:2}},
+      {id:'zombie',name:'Zombie',ac:{physical:5,mental:1,supernatural:8}}
+    ],
+    enemies:[
+      {id:'cultist',name:'Cultist',p:3,m:4,s:2},
+      {id:'ghoul',name:'Ghoul',p:7,m:2,s:5},
+      {id:'wendigo',name:'Wendigo',p:10,m:3,s:7},
+      {id:'elder_thing',name:'Elder Thing',p:8,m:10,s:12}
+    ]
+  }
+};
+
+const RARITY_ORDER={common:0,uncommon:1,rare:2,legendary:3};
+const RARITY_COLOR={common:'#6a8a6a',uncommon:'#4499ff',rare:'#bb88ff',legendary:'#ffb830'};
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+
+let char={
+  setting:'fantasy',classId:'warrior',speciesId:'human',level:1,
+  attributes:{physical:0,mental:0,supernatural:0},
+  imprints:[],skills:[],equipment:{},
+  inventory:[],essence:0,shards:0
+};
+let computed={dirty:true,max:{vitality:0,focus:0,power:0,evade:0,block:0,soak:0}};
+let combat={active:false,round:0,current:{vitality:0,focus:0},autoTimer:null};
+let enemy={name:'',stats:{vitality:0,focus:0,power:0,evade:0,block:0,soak:0},current:{vitality:0,focus:0}};
+
+// ══════════════════════════════════════════
+// FORMULAS
+// ══════════════════════════════════════════
+
+function getBaseAttrs(){
+  const s=SETTINGS_DATA[char.setting];
+  const cls=s.classes.find(c=>c.id===char.classId);
+  const sp=s.species.find(x=>x.id===char.speciesId);
+  return{
+    class:{physical:cls.ac.physical,mental:cls.ac.mental,supernatural:cls.ac.supernatural},
+    species:{physical:sp.ac.physical,mental:sp.ac.mental,supernatural:sp.ac.supernatural}
+  };
+}
+
+function getEquipMods(){
+  const mods={physical:0,mental:0,supernatural:0};
+  SLOTS.forEach(slot=>{
+    const itemId=char.equipment[slot];
+    if(!itemId)return;
+    const item=GEAR[char.setting][slot]?.find(g=>g.id===itemId);
+    if(!item)return;
+    Object.entries(item.mods).forEach(([k,v])=>{mods[k]+=v;});
+  });
+  return mods;
+}
+
+function calcStats(attr,level,imprints){
+  const p=attr.physical,m=attr.mental,s=attr.supernatural;
+  const highest=Math.max(p,m,s);
+  let stats={
+    vitality:(p*5)+(s*2)+(level*3),
+    focus:(m*5)+(s*3)+(level*2),
+    power:(highest*4)+(p*2)+(level*2),
+    evade:(m*3)+(s*2)+(level*1),
+    block:(p*3)+(s*2)+(level*1),
+    soak:Math.min((p*4)+(level*1),60)
+  };
+  let soakReplaced=false;
+  imprints.forEach(id=>{
+    const imp=BASE_IMPRINTS.find(i=>i.id===id);
+    if(!imp)return;
+    imp.mods.forEach(mod=>{
+      if(mod.op==='add_attr_pct') stats[mod.stat]+=Math.round(attr[mod.attr]*mod.val);
+      else if(mod.op==='replace_attr'&&mod.stat==='soak'&&!soakReplaced){
+        const old=(attr[mod.from]*4)+(level*1);
+        const neu=(attr[mod.to]*4)+(level*1);
+        stats.soak=Math.min(stats.soak-old+neu,60);
+        soakReplaced=true;
+      }
+    });
+  });
+  stats.soak=Math.max(0,Math.round(stats.soak));
+  return stats;
+}
+
+function getComputed(){
+  if(computed.dirty){
+    const base=getBaseAttrs();
+    const eqMods=getEquipMods();
+    char.attributes={
+      physical:base.class.physical+base.species.physical+eqMods.physical,
+      mental:base.class.mental+base.species.mental+eqMods.mental,
+      supernatural:base.class.supernatural+base.species.supernatural+eqMods.supernatural
+    };
+    computed.max=calcStats(char.attributes,char.level,char.imprints);
+    computed.dirty=false;
+  }
+  return computed.max;
+}
+
+function getSkillMods(){
+  const mods={self:{power_pct:0,evade_flat:0,block_pct:0,soak_flat:0},enemy:{power_pct:0,block_pct:0}};
+  char.skills.forEach(id=>{
+    const sk=SKILLS[char.setting].find(s=>s.id===id);
+    if(!sk)return;
+    if(sk.mods.self)Object.entries(sk.mods.self).forEach(([k,v])=>{mods.self[k]=(mods.self[k]||0)+v;});
+    if(sk.mods.enemy)Object.entries(sk.mods.enemy).forEach(([k,v])=>{mods.enemy[k]=(mods.enemy[k]||0)+v;});
+  });
+  return mods;
+}
+
+// ══════════════════════════════════════════
+// COMBAT RESOLUTION
+// ══════════════════════════════════════════
+
+function resolveDamage(attackerPower,defEvade,defBlock,defSoak){
+  const evadeRoll=Math.random()*100;
+  const evaded=evadeRoll<defEvade;
+  const rawDmg=attackerPower+Math.floor(Math.random()*Math.ceil(attackerPower*0.3))-Math.floor(attackerPower*0.15);
+  const isCrit=!evaded&&Math.random()<0.1;
+  const afterBlock=Math.max(1,rawDmg-defBlock);
+  const afterSoak=Math.round(afterBlock*(1-(defSoak/100)));
+  const finalDmg=isCrit?Math.round(afterSoak*1.5):Math.max(1,afterSoak);
+  return{evaded,rawDmg:Math.round(rawDmg),afterBlock:Math.max(1,afterBlock),afterSoak:Math.max(1,afterSoak),finalDmg,isCrit,evadeRoll:Math.round(evadeRoll),defEvade,defBlock,defSoak};
+}
+
+// ══════════════════════════════════════════
+// CALC PANEL
+// ══════════════════════════════════════════
+
+function showStatCalc(statName){
+  const base=getBaseAttrs();
+  const eqMods=getEquipMods();
+  const attr=char.attributes;
+  const level=char.level;
+  const p=attr.physical,m=attr.mental,s=attr.supernatural;
+  const highest=Math.max(p,m,s);
+  const stats=getComputed();
+
+  let lines=[];
+  lines.push({t:`// ${statName.toUpperCase()} CALCULATION`,cls:'heading'});
+
+  // attributes breakdown — show gear contributions per slot
+  lines.push({t:`Attributes (class + species + gear):`,cls:'note'});
+  lines.push({t:`  Physical   = ${base.class.physical} (class) + ${base.species.physical} (species) + ${eqMods.physical} (gear) = ${p}`,cls:''});
+  lines.push({t:`  Mental     = ${base.class.mental} (class) + ${base.species.mental} (species) + ${eqMods.mental} (gear) = ${m}`,cls:''});
+  lines.push({t:`  Supernatural = ${base.class.supernatural} (class) + ${base.species.supernatural} (species) + ${eqMods.supernatural} (gear) = ${s}`,cls:''});
+  lines.push({t:`  Highest    = ${highest}`,cls:''});
+
+  // gear detail — which slots contribute to attributes
+  const gearLines=[];
+  SLOTS.forEach(slot=>{
+    const itemId=char.equipment[slot];
+    if(!itemId)return;
+    const item=GEAR[char.setting][slot]?.find(g=>g.id===itemId);
+    if(!item)return;
+    const modStr=Object.entries(item.mods).map(([k,v])=>`${k.charAt(0).toUpperCase()}+${v}`).join(' ');
+    gearLines.push({t:`  [${SLOT_LABELS[slot]}] ${item.name} (${item.rarity}): ${modStr}`,cls:'note'});
+  });
+  if(gearLines.length){
+    lines.push({t:`Gear equipped:`,cls:'note'});
+    gearLines.forEach(l=>lines.push(l));
+  }
+
+  lines.push({t:`Base formula:`,cls:'note'});
+  if(statName==='vitality'){
+    lines.push({t:`  (Physical×5) + (Supernatural×2) + (Level×3)`,cls:''});
+    lines.push({t:`  (${p}×5) + (${s}×2) + (${level}×3) = ${(p*5)+(s*2)+(level*3)}`,cls:''});
+  } else if(statName==='focus'){
+    lines.push({t:`  (Mental×5) + (Supernatural×3) + (Level×2)`,cls:''});
+    lines.push({t:`  (${m}×5) + (${s}×3) + (${level}×2) = ${(m*5)+(s*3)+(level*2)}`,cls:''});
+  } else if(statName==='power'){
+    lines.push({t:`  (Highest×4) + (Physical×2) + (Level×2)`,cls:''});
+    lines.push({t:`  (${highest}×4) + (${p}×2) + (${level}×2) = ${(highest*4)+(p*2)+(level*2)}`,cls:''});
+  } else if(statName==='evade'){
+    lines.push({t:`  (Mental×3) + (Supernatural×2) + (Level×1)`,cls:''});
+    lines.push({t:`  (${m}×3) + (${s}×2) + (${level}×1) = ${(m*3)+(s*2)+(level*1)}%`,cls:''});
+  } else if(statName==='block'){
+    lines.push({t:`  (Physical×3) + (Supernatural×2) + (Level×1)`,cls:''});
+    lines.push({t:`  (${p}×3) + (${s}×2) + (${level}×1) = ${(p*3)+(s*2)+(level*1)}`,cls:''});
+  } else if(statName==='soak'){
+    lines.push({t:`  (Physical×4) + (Level×1), cap 60%`,cls:''});
+    lines.push({t:`  (${p}×4) + ${level} = ${Math.min((p*4)+level,60)}%`,cls:''});
+  }
+
+  const activeImprints=char.imprints.filter(id=>{
+    const imp=BASE_IMPRINTS.find(i=>i.id===id);
+    return imp&&imp.mods.some(m=>m.stat===statName);
+  });
+  if(activeImprints.length){
+    lines.push({t:`Imprint modifiers:`,cls:'note'});
+    activeImprints.forEach(id=>{
+      const imp=BASE_IMPRINTS.find(i=>i.id===id);
+      imp.mods.filter(m=>m.stat===statName).forEach(mod=>{
+        if(mod.op==='add_attr_pct') lines.push({t:`  ${imp.name}: +${Math.round(attr[mod.attr]*mod.val)} (${attr[mod.attr]}×${mod.val})`,cls:''});
+        else if(mod.op==='replace_attr') lines.push({t:`  ${imp.name}: swap Physical→Supernatural in formula`,cls:''});
+      });
+    });
+  }
+
+  lines.push({t:`Final: ${stats[statName]}${statName==='evade'||statName==='soak'?'%':''}`,cls:'result'});
+  renderCalc(lines);
+}
+
+function showAttackCalc(result,attackerName,defenderName,skillsUsed){
+  let lines=[];
+  lines.push({t:`// ATTACK: ${attackerName} → ${defenderName}`,cls:'heading'});
+  if(skillsUsed&&skillsUsed.length) lines.push({t:`Skills active: ${skillsUsed.join(', ')}`,cls:'skill'});
+  lines.push({t:`Attack roll:`,cls:'note'});
+  lines.push({t:`  Base Power + variance (0–30%) − 15% = raw damage`,cls:''});
+  lines.push({t:`  Raw damage this roll: ${result.rawDmg}`,cls:''});
+  if(result.evaded){
+    lines.push({t:`Evade check:`,cls:'note'});
+    lines.push({t:`  Rolled ${result.evadeRoll} vs threshold ${result.defEvade}%`,cls:''});
+    lines.push({t:`  ${result.evadeRoll} < ${result.defEvade} → EVADED`,cls:'miss'});
+    lines.push({t:`Result: 0 damage`,cls:'miss'});
+  } else {
+    lines.push({t:`Evade check:`,cls:'note'});
+    lines.push({t:`  Rolled ${result.evadeRoll} vs threshold ${result.defEvade}%`,cls:''});
+    lines.push({t:`  ${result.evadeRoll} >= ${result.defEvade} → HIT`,cls:'hit'});
+    lines.push({t:`Block reduction:`,cls:'note'});
+    lines.push({t:`  ${result.rawDmg} − ${result.defBlock} (block) = ${result.afterBlock}`,cls:''});
+    lines.push({t:`Soak reduction:`,cls:'note'});
+    lines.push({t:`  ${result.afterBlock} × ${((1-result.defSoak/100)*100).toFixed(0)}% (${result.defSoak}% soaked) = ${result.afterSoak}`,cls:''});
+    if(result.isCrit){
+      lines.push({t:`Critical hit! (10% chance):`,cls:'note'});
+      lines.push({t:`  ${result.afterSoak} × 1.5 = ${result.finalDmg}`,cls:'crit'});
+    }
+    lines.push({t:`Final damage: ${result.finalDmg}`,cls:'result'});
+  }
+  renderCalc(lines);
+}
+
+function renderCalc(lines){
+  document.getElementById('calc-panel').innerHTML=lines.map(l=>`<div class="calc-line ${l.cls||''}">${l.t}</div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// UI
+// ══════════════════════════════════════════
+
+function switchTab(side,id){
+  const prefix=side==='left'?'left':'right';
+  document.querySelectorAll(`#${prefix}-${id}`).forEach(()=>{});
+  // find all tab-contents in same panel
+  const panel=document.getElementById(`${prefix}-${id}`).closest('.panel');
+  panel.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  panel.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`${prefix}-${id}`).classList.add('active');
+  const tabs=panel.querySelectorAll('.tab');
+  const ids=['char','equip','skills','log','enemy'];
+  tabs.forEach(tab=>{
+    if(tab.textContent.toLowerCase().replace(/[^a-z]/g,'')===id||
+       (id==='char'&&tab.textContent==='Character')||
+       (id==='equip'&&tab.textContent==='Equipment')||
+       (id==='skills'&&tab.textContent==='Skills')||
+       (id==='log'&&tab.textContent==='Log')||
+       (id==='enemy'&&tab.textContent==='Enemy')
+    ) tab.classList.add('active');
+  });
+}
+
+function onSettingChange(){
+  char.setting=document.getElementById('sel-setting').value;
+  char.imprints=[];char.skills=[];char.equipment={};char.inventory=[];
+  populateSelects();
+  onBuildChange();
+}
+
+function populateSelects(){
+  const s=SETTINGS_DATA[char.setting];
+  document.getElementById('sel-class').innerHTML=s.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('sel-species').innerHTML=s.species.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');
+  document.getElementById('sel-enemy').innerHTML=s.enemies.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  char.classId=s.classes[0].id;
+  char.speciesId=s.species[0].id;
+}
+
+function onBuildChange(){
+  char.classId=document.getElementById('sel-class').value;
+  char.speciesId=document.getElementById('sel-species').value;
+  char.level=Math.max(1,Math.min(100,parseInt(document.getElementById('inp-level').value)||1));
+  computed.dirty=true;
+  renderCharacter();
+  renderEquipSlots();
+  renderSkills();
+  onEnemyChange();
+}
+
+function onEnemyChange(){
+  buildEnemy();
+  updateArenaDisplay();
+}
+
+const RARITY_PIP={common:'r-common',uncommon:'r-uncommon',rare:'r-rare',legendary:'r-legendary'};
+
+function rarityColor(r){return RARITY_COLOR[r]||'#6a8a6a';}
+
+function renderCharacter(){
+  const stats=getComputed();
+  const attr=char.attributes;
+  const base=getBaseAttrs();
+  const eqMods=getEquipMods();
+  const maxAttr=Math.max(attr.physical,attr.mental,attr.supernatural,1);
+
+  document.getElementById('attr-display').innerHTML=
+    [['Physical',attr.physical,'green',base.class.physical,base.species.physical,eqMods.physical],
+     ['Mental',attr.mental,'amber',base.class.mental,base.species.mental,eqMods.mental],
+     ['Supernatural',attr.supernatural,'blue',base.class.supernatural,base.species.supernatural,eqMods.supernatural]]
+    .map(([n,v,c,cl,sp,eq])=>`
+    <div class="attr-row">
+      <span class="attr-name">${n}</span>
+      <span class="attr-sub" style="color:var(--text3)">${cl}+${sp}${eq?'+'+eq:''}</span>
+      <div class="attr-bar-track"><div class="attr-bar-fill ${c}" style="width:${Math.round((v/maxAttr)*100)}%"></div></div>
+      <span class="attr-val" style="color:var(--${c==='green'?'green':c==='amber'?'amber':'blue'})">${v}</span>
+    </div>`).join('');
+
+  const statDefs=[
+    ['vitality','Vitality',''],['focus','Focus','blue'],['power','Power','amber'],
+    ['evade','Evade','purple'],['block','Block',''],['soak','Soak','red']
+  ];
+  document.getElementById('stat-display').innerHTML=statDefs.map(([k,label,col])=>`
+    <div class="sc" onclick="showStatCalc('${k}')">
+      <div class="sc-label">${label}</div>
+      <div class="sc-val ${col}">${stats[k]}${k==='evade'||k==='soak'?'%':''}</div>
+    </div>`).join('');
+
+  document.getElementById('imprint-list').innerHTML=BASE_IMPRINTS.map(imp=>`
+    <div class="toggle-item ${char.imprints.includes(imp.id)?'active':''}" onclick="${combat.active?'':` toggleImprint('${imp.id}')`}">
+      <div style="flex:1">
+        <div class="ti-name">${imp.name}</div>
+        <div class="ti-desc">${imp.desc}</div>
+      </div>
+      <div class="ti-cost ${char.imprints.includes(imp.id)?'active':''}">${imp.cost}◆</div>
+    </div>`).join('');
+
+  const s=SETTINGS_DATA[char.setting];
+  const cls=s.classes.find(c=>c.id===char.classId);
+  const sp=s.species.find(x=>x.id===char.speciesId);
+  document.getElementById('player-name').textContent=`${cls.name} / ${sp.name}`;
+  document.getElementById('ps-power').textContent=stats.power;
+  document.getElementById('ps-evade').textContent=stats.evade+'%';
+  document.getElementById('ps-block').textContent=stats.block;
+}
+
+function renderEquipSlots(){
+  const gearBySetting=GEAR[char.setting];
+  document.getElementById('equip-slots').innerHTML=SLOTS.map(slot=>{
+    const items=gearBySetting[slot]||[];
+    const equipped=char.equipment[slot]||'';
+    return`<div class="eq-slot">
+      <div class="eq-slot-label">${SLOT_LABELS[slot]}</div>
+      <select onchange="equipItem('${slot}',this.value)">
+        <option value="">— none —</option>
+        ${items.map(g=>`<option value="${g.id}" ${equipped===g.id?'selected':''}>${g.name} (${g.rarity})</option>`).join('')}
+      </select>
+    </div>`;
+  }).join('');
+  renderInventory();
+}
+
+function renderInventory(){
+  const inv=document.getElementById('inventory-list');
+  if(!char.inventory.length){
+    inv.innerHTML='<div style="font-size:9px;color:var(--text3)">No items yet. Win combat to earn gear.</div>';
+    return;
+  }
+  inv.innerHTML=char.inventory.map((item,idx)=>`
+    <div class="toggle-item" onclick="equipFromInventory(${idx})" style="border-color:${rarityColor(item.rarity)}22">
+      <div style="flex:1">
+        <div class="ti-name" style="color:${rarityColor(item.rarity)}">${item.name}</div>
+        <div class="ti-desc">${SLOT_LABELS[item.slot]} · ${Object.entries(item.mods).map(([k,v])=>`${k.charAt(0).toUpperCase()}+${v}`).join(' ')}</div>
+      </div>
+      <div class="ti-cost">equip</div>
+    </div>`).join('');
+}
+
+function equipItem(slot,itemId){
+  if(itemId) char.equipment[slot]=itemId;
+  else delete char.equipment[slot];
+  computed.dirty=true;
+  renderCharacter();
+  renderEquipSlots();
+}
+
+function equipFromInventory(idx){
+  const item=char.inventory[idx];
+  if(!item)return;
+  char.equipment[item.slot]=item.id;
+  // ensure gear exists in GEAR table
+  const existing=GEAR[char.setting][item.slot]?.find(g=>g.id===item.id);
+  if(!existing) (GEAR[char.setting][item.slot]=GEAR[char.setting][item.slot]||[]).push(item);
+  computed.dirty=true;
+  renderCharacter();
+  renderEquipSlots();
+}
+
+function renderSkills(){
+  const skills=SKILLS[char.setting];
+  document.getElementById('skill-list').innerHTML=skills.map(sk=>`
+    <div class="toggle-item ${char.skills.includes(sk.id)?'active':''}" onclick="${combat.active?'':` toggleSkill('${sk.id}')`}">
+      <div style="flex:1">
+        <div class="ti-name">${sk.name} <span style="color:var(--blue);font-size:9px">(${sk.cost} Focus)</span></div>
+        <div class="ti-desc">${sk.desc}</div>
+        <div class="ti-effect">${sk.effect}</div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleImprint(id){
+  if(combat.active)return;
+  char.imprints=char.imprints.includes(id)?char.imprints.filter(i=>i!==id):[...char.imprints,id];
+  computed.dirty=true;
+  renderCharacter();
+  const heading=document.getElementById('calc-panel').querySelector('.calc-line.heading');
+  if(heading){const m=heading.textContent.match(/\/\/ (\w+) CALCULATION/);if(m)showStatCalc(m[1].toLowerCase());}
+}
+
+function toggleSkill(id){
+  if(combat.active)return;
+  char.skills=char.skills.includes(id)?char.skills.filter(i=>i!==id):[...char.skills,id];
+  renderSkills();
+}
+
+// ══════════════════════════════════════════
+// ENEMY
+// ══════════════════════════════════════════
+
+function buildEnemy(){
+  const s=SETTINGS_DATA[char.setting];
+  const eType=document.getElementById('sel-enemy').value;
+  const diff=parseFloat(document.getElementById('sel-diff').value);
+  const diffLabel={0.6:'WEAK',1:'NORMAL',1.5:'STRONG',2.2:'ELITE'}[diff]||'NORMAL';
+  const diffColor={0.6:'#6a8a6a',1:'#3ddc84',1.5:'#ffb830',2.2:'#ff4444'}[diff]||'#3ddc84';
+  const eData=s.enemies.find(e=>e.id===eType)||s.enemies[0];
+  const attr={physical:Math.round(eData.p*diff),mental:Math.round(eData.m*diff),supernatural:Math.round(eData.s*diff)};
+  const stats=calcStats(attr,char.level,[]);
+  enemy.name=eData.name;enemy.stats=stats;
+  enemy.current={vitality:stats.vitality,focus:stats.focus};
+  document.getElementById('es-power').textContent=stats.power;
+  document.getElementById('es-evade').textContent=stats.evade+'%';
+  document.getElementById('es-block').textContent=stats.block;
+  document.getElementById('enemy-name').innerHTML=
+    `${eData.name} <span style="font-size:8px;letter-spacing:1px;color:${diffColor};border:1px solid ${diffColor};padding:1px 5px;margin-left:4px;vertical-align:middle">${diffLabel}</span>`;
+  document.getElementById('enemy-stat-preview').innerHTML=
+    [['VIT',stats.vitality],['FOC',stats.focus],['PWR',stats.power],['EVD',stats.evade+'%'],['BLK',stats.block],['SOK',stats.soak+'%']]
+    .map(([l,v])=>`<div class="mini-stat"><div class="mini-stat-label">${l}</div><div class="mini-stat-val">${v}</div></div>`).join('');
+}
+
+function updateArenaDisplay(){
+  const stats=getComputed();
+  const cv=combat.active?combat.current.vitality:stats.vitality;
+  const cf=combat.active?combat.current.focus:stats.focus;
+  const ev=combat.active?enemy.current.vitality:enemy.stats.vitality;
+  const ef=combat.active?enemy.current.focus:enemy.stats.focus;
+
+  document.getElementById('player-hp-text').textContent=`${cv}/${stats.vitality}`;
+  document.getElementById('player-hp-bar').style.width=`${Math.max(0,(cv/stats.vitality)*100)}%`;
+  const hpPct=cv/stats.vitality;
+  document.getElementById('player-hp-bar').className=`hp-fill ${hpPct>0.5?'green':hpPct>0.25?'amber':'red'}`;
+  document.getElementById('player-focus-text').textContent=`${cf}/${stats.focus}`;
+  document.getElementById('player-focus-bar').style.width=`${Math.max(0,(cf/stats.focus)*100)}%`;
+
+  document.getElementById('enemy-hp-text').textContent=`${ev}/${enemy.stats.vitality}`;
+  document.getElementById('enemy-hp-bar').style.width=`${Math.max(0,(ev/enemy.stats.vitality)*100)}%`;
+  const ehpPct=ev/enemy.stats.vitality;
+  document.getElementById('enemy-hp-bar').className=`hp-fill ${ehpPct>0.5?'red':ehpPct>0.25?'amber':'green'}`;
+  document.getElementById('enemy-focus-text').textContent=`${ef}/${enemy.stats.focus}`;
+  document.getElementById('enemy-focus-bar').style.width=`${Math.max(0,(ef/enemy.stats.focus)*100)}%`;
+}
+
+// ══════════════════════════════════════════
+// COMBAT
+// ══════════════════════════════════════════
+
+function log(msg,type,calcData){
+  const el=document.getElementById('log-entries');
+  const div=document.createElement('div');
+  div.className=`le ${type}`;
+  div.textContent=msg;
+  if(calcData) div.onclick=()=>showAttackCalc(calcData.result,calcData.attacker,calcData.defender,calcData.skills);
+  el.appendChild(div);
+  el.scrollTop=el.scrollHeight;
+}
+
+function clearLog(){
+  document.getElementById('log-entries').innerHTML='<div class="le system">// log cleared</div>';
+}
+
+function startCombat(){
+  const stats=getComputed();
+  buildEnemy();
+  combat.active=true;combat.round=0;
+  combat.current={vitality:stats.vitality,focus:stats.focus};
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('btn-step').disabled=false;
+  document.getElementById('btn-auto').disabled=false;
+  document.getElementById('outcome-overlay').classList.remove('show');
+  switchTab('right','log');
+  log('// combat initialized','system');
+  log(`Player VIT:${stats.vitality} FOC:${stats.focus} PWR:${stats.power} EVD:${stats.evade}% BLK:${stats.block} SOK:${stats.soak}%`,'info');
+  log(`${enemy.name} VIT:${enemy.stats.vitality} PWR:${enemy.stats.power} EVD:${enemy.stats.evade}%`,'info');
+  if(char.skills.length) log(`Active skills: ${char.skills.map(id=>SKILLS[char.setting].find(s=>s.id===id)?.name).join(', ')}`,'skill');
+  updateArenaDisplay();
+}
+
+function stepRound(){
+  if(!combat.active)return;
+  combat.round++;
+  const stats=getComputed();
+  const skMods=getSkillMods();
+  log(`── ROUND ${combat.round} ──`,'round');
+
+  // resolve active skills / focus cost
+  const activeSkillNames=[];
+  if(char.skills.length){
+    char.skills.forEach(id=>{
+      const sk=SKILLS[char.setting].find(s=>s.id===id);
+      if(!sk)return;
+      if(combat.current.focus>=sk.cost){
+        combat.current.focus=Math.max(0,combat.current.focus-sk.cost);
+        activeSkillNames.push(sk.name);
+        log(`${sk.name} activated (−${sk.cost} Focus)`, 'skill');
+      } else {
+        log(`${sk.name} — not enough Focus (need ${sk.cost}, have ${combat.current.focus})`,'miss');
+      }
+    });
+  }
+
+  // apply skill mods to this round
+  const playerPower=Math.round(stats.power*(1+skMods.self.power_pct));
+  const playerEvade=Math.min(95,stats.evade+skMods.self.evade_flat);
+  const playerBlock=Math.round(stats.block*(1+(skMods.self.block_pct||0)));
+  const playerSoak=Math.min(85,stats.soak+(skMods.self.soak_flat||0));
+  const enemyEffBlock=Math.max(0,Math.round(enemy.stats.block*(1+(skMods.enemy.block_pct||0))));
+  const enemyEffPower=Math.max(1,Math.round(enemy.stats.power*(1+(skMods.enemy.power_pct||0))));
+
+  // player attacks
+  const pAtk=resolveDamage(playerPower,enemy.stats.evade,enemyEffBlock,enemy.stats.soak);
+  if(pAtk.evaded){
+    log(`Player → ${enemy.name}: EVADED (roll ${pAtk.evadeRoll} vs ${pAtk.defEvade}%)`,'miss',{result:pAtk,attacker:'Player',defender:enemy.name,skills:activeSkillNames});
+  } else {
+    enemy.current.vitality=Math.max(0,enemy.current.vitality-pAtk.finalDmg);
+    log(`Player → ${enemy.name}: ${pAtk.isCrit?'CRIT ':''}${pAtk.finalDmg} dmg [${enemy.current.vitality}/${enemy.stats.vitality}]`,pAtk.isCrit?'crit':'hit',{result:pAtk,attacker:'Player',defender:enemy.name,skills:activeSkillNames});
+  }
+
+  if(enemy.current.vitality<=0){endCombat(true);return;}
+
+  // enemy attacks
+  const eAtk=resolveDamage(enemyEffPower,playerEvade,playerBlock,playerSoak);
+  if(eAtk.evaded){
+    log(`${enemy.name} → Player: EVADED (roll ${eAtk.evadeRoll} vs ${eAtk.defEvade}%)`,'miss',{result:eAtk,attacker:enemy.name,defender:'Player',skills:[]});
+  } else {
+    combat.current.vitality=Math.max(0,combat.current.vitality-eAtk.finalDmg);
+    log(`${enemy.name} → Player: ${eAtk.isCrit?'CRIT ':''}${eAtk.finalDmg} dmg [${combat.current.vitality}/${stats.vitality}]`,eAtk.isCrit?'crit':'hit',{result:eAtk,attacker:enemy.name,defender:'Player',skills:[]});
+  }
+
+  if(combat.current.vitality<=0){endCombat(false);return;}
+
+  document.getElementById('round-counter').textContent=`Round ${combat.round}`;
+  updateArenaDisplay();
+}
+
+let autoTimer=null;
+function autoCombat(){
+  if(autoTimer){
+    clearInterval(autoTimer);autoTimer=null;
+    document.getElementById('btn-auto').textContent='Auto';
+    return;
+  }
+  document.getElementById('btn-auto').textContent='Stop';
+  autoTimer=setInterval(()=>{
+    if(!combat.active){clearInterval(autoTimer);autoTimer=null;document.getElementById('btn-auto').textContent='Auto';return;}
+    stepRound();
+  },500);
+}
+
+function rollLootDrop(){
+  const slots=SLOTS;
+  const slot=slots[Math.floor(Math.random()*slots.length)];
+  const gearPool=GEAR[char.setting][slot];
+  if(!gearPool||!gearPool.length)return null;
+  // weighted rarity: common 50, uncommon 30, rare 15, legendary 5
+  const roll=Math.random()*100;
+  let rarity='common';
+  if(roll<5)rarity='legendary';
+  else if(roll<20)rarity='rare';
+  else if(roll<50)rarity='uncommon';
+  const rarityItems=gearPool.filter(g=>g.rarity===rarity);
+  const pool=rarityItems.length?rarityItems:gearPool;
+  const item=pool[Math.floor(Math.random()*pool.length)];
+  return{...item,slot};
+}
+
+function endCombat(playerWon){
+  combat.active=false;
+  if(autoTimer){clearInterval(autoTimer);autoTimer=null;}
+  document.getElementById('btn-step').disabled=true;
+  document.getElementById('btn-auto').disabled=true;
+  document.getElementById('btn-auto').textContent='Auto';
+  document.getElementById('btn-start').disabled=false;
+
+  if(playerWon){
+    const essenceGain=Math.floor(enemy.stats.vitality*0.5)+combat.round;
+    const shardDrop=Math.random()<0.15;
+    const lootDrop=Math.random()<0.6?rollLootDrop():null;
+    char.essence+=essenceGain;
+    if(shardDrop)char.shards++;
+    if(lootDrop){
+      char.inventory.push(lootDrop);
+      // ensure it exists in GEAR table
+      if(!GEAR[char.setting][lootDrop.slot].find(g=>g.id===lootDrop.id))
+        GEAR[char.setting][lootDrop.slot].push(lootDrop);
+    }
+    document.getElementById('inp-essence').value=char.essence;
+    document.getElementById('inp-shards').value=char.shards;
+    log(`${enemy.name} defeated in ${combat.round} rounds`,'death');
+    log(`Earned: ${essenceGain} Essence${shardDrop?' + 1 Shard':''}${lootDrop?' + '+lootDrop.name:''}`,'reward');
+    document.getElementById('outcome-title').textContent='VICTORY';
+    document.getElementById('outcome-title').className='outcome-title win';
+    document.getElementById('outcome-sub').textContent=`${enemy.name} defeated in ${combat.round} rounds`;
+    document.getElementById('outcome-rewards').innerHTML=`
+      <div class="reward-pill">+${essenceGain} Essence</div>
+      ${shardDrop?'<div class="reward-pill">+1 Shard</div>':''}
+      ${lootDrop?`<div class="reward-pill gear" onclick="equipFromInventory(${char.inventory.length-1});document.getElementById('outcome-overlay').classList.remove('show')">⚙ ${lootDrop.name}</div>`:''}`;
+    renderInventory();
+    renderEquipSlots();
+  } else {
+    log(`Player defeated in round ${combat.round}`,'death');
+    document.getElementById('outcome-title').textContent='DEFEATED';
+    document.getElementById('outcome-title').className='outcome-title lose';
+    document.getElementById('outcome-sub').textContent=`Fell in round ${combat.round}`;
+    document.getElementById('outcome-rewards').innerHTML='';
+  }
+  document.getElementById('round-counter').textContent=`Round ${combat.round}`;
+  updateArenaDisplay();
+  setTimeout(()=>document.getElementById('outcome-overlay').classList.add('show'),400);
+}
+
+function resetCombat(){
+  if(autoTimer){clearInterval(autoTimer);autoTimer=null;}
+  combat.active=false;combat.round=0;
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-step').disabled=true;
+  document.getElementById('btn-auto').disabled=true;
+  document.getElementById('btn-auto').textContent='Auto';
+  document.getElementById('outcome-overlay').classList.remove('show');
+  document.getElementById('round-counter').textContent='Round —';
+  buildEnemy();updateArenaDisplay();
+  log('// combat reset','system');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+populateSelects();
+onBuildChange();
+</script>
+</body>
+</html>

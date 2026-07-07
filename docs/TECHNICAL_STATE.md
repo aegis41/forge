@@ -1,6 +1,6 @@
 # Forge — Technical State
 
-Last updated from session: June 18, 2026
+Last updated from session: July 7, 2026
 
 ---
 
@@ -10,8 +10,9 @@ Last updated from session: June 18, 2026
 forge/
 ├── game/
 │   └── index.html        — player-facing prototype (working)
+├── settings-data.js       — the 3 shipped settings; single source of truth, loaded by both game/index.html and admin/index.html via <script src>
 ├── admin/
-│   └── index.html        — setting editor (partially outdated)
+│   └── index.html        — read-only setting visualizer (being repurposed — see below)
 ├── poc/
 ├── sim/
 │   └── index.html        — combat simulator (exists, not recently touched)
@@ -43,38 +44,32 @@ The game file uses flat keys: `flavors['warrior_human']`. This differs from earl
 
 ---
 
-## admin/index.html — current state
+## admin/index.html — role change (July 7 session)
 
-**What works:**
-- Three-view layout: Editor, Questions, Visualizer
-- Sidebar with setting list, active state, badges (official / custom / locked)
-- Meta editor (name, description, author, version, lock toggle)
-- Class editor — add, edit, remove, attribute contributions
-- Species editor — add, edit, remove, attribute contributions
-- Question editor — add, remove, expand/collapse, axis selection, answer weights per class and species
-- Score visualizer — cumulative weight totals across all questions, permutation matrix showing all class×species attribute combos
-- Import / export JSON
-- New setting scaffold
+**Scope decision:** the game ships with exactly three hand-authored settings for v1. There is no in-game or admin-tool authoring of new settings in this release — CRUD-style setting creation is explicitly deferred to a possible future version. This means admin/index.html is no longer being built out as an editor.
 
-**What is missing or outdated:**
+**New role: read-only setting visualizer**, reading from the same `settings-data.js` file the game itself loads, so setting data exists in exactly one place instead of two.
 
-Schema fields not yet authored:
-- `meta.currency_name` — no field in the editor
-- `flavors` — no editor exists; this is a full n×n matrix of text fields
-- `tutorial` — no editor; needs fields for enemy_id, guaranteed_win, guaranteed_drop, drop_item_id, drop_rarity, intro_text
+**What still works and is being kept:**
+- Score visualizer — cumulative weight totals across all questions
+- Permutation matrix — all class×species attribute combos (this may end up double-duty as the future flavors-authoring grid, since it already builds the class×species cross-reference)
+- Sidebar setting list / selection
 
-Entire sections with no editor yet:
-- Skills
-- Imprints
-- Gear (with slot, disposition, and attribute modifiers)
-- Enemies (with attributes and loot table)
-- Companions (with cost, upgrade cost, attributes, skill reference)
+**What is being removed (no longer needed once there's no authoring):**
+- Class / Species / Question editors (add, edit, remove)
+- Meta editor (name, description, author, version, lock toggle, currency_name)
+- New setting scaffold (`newSetting()`)
+- Import / export JSON — no longer the data path; `settings-data.js` is edited directly
+- Import validator
 
-Data model issues:
-- Default settings include a Sci-Fi entry that is not in the game file. Sci-Fi should remain as a locked placeholder only.
-- `newSetting()` scaffolds without `flavors`, `tutorial`, `skills`, `imprints`, `gear`, `enemies`, or `companions`. A setting created here would be invalid for the game.
-- The import validator checks for `id`, `meta`, `classes`, `species`, `questions` only. It will reject future exports that include new required fields unless updated.
-- Schema version is `1.0.0`. The designed schema is `2.0.0`.
+**Not yet done (this is the current TODO):**
+- Wire admin/index.html to load `settings-data.js` via `<script src>` instead of its own hardcoded `DEFAULT_SETTINGS` array
+- Strip the editor-only UI and functions listed above
+- Confirm the visualizer still renders correctly once it's reading externally-sourced data instead of its own local array
+
+**Resolved from prior session (carried forward, now moot for the editor but still true of the schema):**
+- Sci-Fi remains a locked placeholder only, consistent with game/index.html
+- Schema version is `1.0.0` in the admin defaults; the designed schema is `2.0.0` — versioning will need to be reconciled once settings-data.js is the single source
 
 ---
 
@@ -94,7 +89,8 @@ This is the designed target. The admin editor should produce this shape.
       "created": "YYYY-MM-DD",
       "locked": false,
       "thumbnail": "",
-      "currency_name": "string"
+      "currency_name": "string",
+      "unlock_requirement": null // null for the first setting (always unlocked). For subsequent settings, TBD shape — decided so far: unlocks on completing the previous setting in sequence. Exact "completion" signal beyond setting 1 (which uses tutorial-finished) is not yet defined — TODO
     },
     "classes": [
       {
@@ -106,9 +102,10 @@ This is the designed target. The admin editor should produce this shape.
     ],
     "species": [ /* same shape as classes */ ],
     "flavors": {
-      "class_id_species_id": "flavor text string" // TODO:PRIORITY-HIGH this structure needs to be fixed. This might be the first thing we need to work through.
+      "class_id_species_id": "flavor text string" // Keyed by id, not array index — decided July 7. Indexes would silently break on class/species reorder or delete. Flat-vs-nested key format still TODO.
     },
     "tutorial": {
+      "_comment": "OPTIONAL as of July 7 — only the first/starting setting has this field. Settings 2+ omit it entirely and skip straight to normal combat; this doubles as the signal that the prior setting was completed.",
       "enemy_id": "string",
       "guaranteed_win": true,
       "guaranteed_drop": true,
@@ -242,9 +239,12 @@ Rarity multipliers apply to: item stat modifiers, sell value (`base_value × mul
 
 ---
 
-## Immediate next steps (in order)
+## Immediate next steps (in order, updated July 7)
 
-1. **Fix Flavors** - we need to work out this system, first determining if it's needed, second. . .what it does.
-2. **Update admin editor** — add missing schema fields and new section editors
-3. **Update combat simulator** — add new elements into combat simulation
-4. **Update README.md** - make sure it's in tune
+1. **Create `settings-data.js`** — extract the `SETTINGS` array out of `game/index.html` into its own file; update `game/index.html` to load it via `<script src="settings-data.js">` instead of the inline array.
+2. **Wire `admin/index.html` to the same file** — same `<script src>` approach; strip the editor-only UI (class/species/question editors, meta editor, new-setting scaffold, import/export, validator) since there's no more authoring to support; keep the score visualizer and permutation matrix.
+3. **Resolve flavors key format** (flat vs. nested) — still open; needed before flavors get fully hand-authored for all three settings.
+4. **Hand-author the remaining schema sections for all three settings directly in `settings-data.js`**: `tutorial` (setting 1 only), `skills`, `imprints`, `gear`, `enemies`, `companions`, and `meta.unlock_requirement` for settings 2 and 3.
+5. **Implement unlock gating in `game/index.html`** — setting 1 always available; settings 2/3 locked until the previous setting is completed (exact completion signal beyond setting 1's tutorial-finished still needs defining).
+6. **Update combat simulator** — add new elements into combat simulation.
+7. **Update README.md** — reflect the fixed 3-setting scope, the settings-data.js split, and admin tool's new read-only role.

@@ -7,7 +7,8 @@ Forge is a config-driven RPG idle game. Players complete a personality interview
 The project has three components:
 
 - `game/index.html` — the player-facing game
-- `admin/index.html` — the setting editor / scenario builder !!TODO:PRIORITY-HIGH!!
+- `settings-data.js` — the three shipped settings, loaded by both `game/index.html` and `admin/index.html` via `<script src>`, so setting data lives in exactly one place
+- `admin/index.html` — read-only setting visualizer (score visualizer / permutation matrix). No longer an editor — settings are hand-authored directly in `settings-data.js`. !!TODO:PRIORITY-HIGH!! wire it to read from `settings-data.js` instead of its own hardcoded settings
 - `sim/index.html` — a combat simulator which will need some updates soon
 
 ---
@@ -96,7 +97,7 @@ These were resolved through discussion and should not be re-opened without expli
 
 **Loot flow** — empty slot: auto-equip with toast notification. Occupied slot at level 1–4: four-option modal (Equip / Store / Sell / Salvage) with side-by-side stat comparison and sell/salvage values shown. Level 5+: loot automation config (not yet built).
 
-**Flavors** — Needs to be reworked. TODO
+**Flavors** — keyed by class/species `id`, not array index (indexes shift on reorder/delete and would silently corrupt flavor pairings). Whether the key format is flat (`"warrior_dwarf"`) or nested (`{warrior:{dwarf:"..."}}`) is still open — TODO before this is built out further.
 
 **Gear** — flat array with `slot` property embedded in each item, not keyed by slot.
 
@@ -106,7 +107,11 @@ These were resolved through discussion and should not be re-opened without expli
 
 **Imprints** — base pool defined at engine level, setting-specific additions merge in at load time. Purchased with Shards. Permanently modify the combat stat derivation formulas.
 
-**Tutorial** — special-cased per setting. Guaranteed win, guaranteed drop of a specific item at a specific rarity, custom intro text.
+**Setting scope (v1)** — the game ships with exactly three settings, hand-authored directly in `settings-data.js`. There is no in-game or admin-tool authoring of new settings for this release. A future version may reopen CRUD-style setting creation; that is explicitly out of scope for now.
+
+**Setting progression** — settings are unlocked in order. The first setting is available from the start. Each subsequent setting unlocks when the player completes the one before it. What exactly "completes" a setting means (tutorial finished, first win, a level threshold, etc.) is not yet nailed down beyond setting 1 — see Tutorial below — and may gain more complexity later, but for now the rule is simply: finish the previous setting, unlock the next.
+
+**Tutorial** — only the first (starting) setting has a tutorial. It is special-cased: guaranteed win, guaranteed drop of a specific item at a specific rarity, custom intro text. Settings 2 and 3 omit the `tutorial` field entirely and go straight to normal combat — this doubles as the "completed setting 1" signal that unlocks setting 2.
 
 **10 questions** — fixed count. The tie rate at 10 questions is acceptable. Ties are a feature — the tie resolution screen lets the player confirm or randomise their fate.
 

@@ -169,7 +169,7 @@ input[type=number]::-webkit-inner-spin-button{opacity:.4}
 const DEFAULT_SETTINGS = [
   {
     id:'fantasy',version:'1.0.0',
-    meta:{name:'Sword & Sorcery',description:'A world of warriors, wizards, and ancient magic.',author:'official',created:'2026-06-04',locked:false,thumbnail:''},
+    meta:{name:'Sword & Sorcery',description:'A world of warriors, wizards, and ancient magic.',author:'official',created:'2026-06-04',locked:false,thumbnail:'',currency_name:'Gold'},
     classes:[
       {id:'warrior',name:'Warrior',description:'Masters of physical combat and battlefield tactics.',attribute_contribution:{physical:8,mental:3,supernatural:1}},
       {id:'mage',name:'Mage',description:'Wielders of arcane power and ancient knowledge.',attribute_contribution:{physical:2,mental:5,supernatural:8}},
@@ -235,7 +235,7 @@ const DEFAULT_SETTINGS = [
   },
   {
     id:'scifi',version:'1.0.0',
-    meta:{name:'Sci-Fi',description:'A future of starships, cybernetics, and galactic conflict.',author:'official',created:'2026-06-04',locked:true,thumbnail:''},
+    meta:{name:'Sci-Fi',description:'A future of starships, cybernetics, and galactic conflict.',author:'official',created:'2026-06-04',locked:true,thumbnail:'',currency_name:'Credits'},
     classes:[
       {id:'soldier',name:'Soldier',description:'Augmented warriors trained for frontline combat.',attribute_contribution:{physical:8,mental:3,supernatural:1}},
       {id:'hacker',name:'Hacker',description:'Digital ghosts who bend systems to their will.',attribute_contribution:{physical:2,mental:8,supernatural:3}},
@@ -250,7 +250,7 @@ const DEFAULT_SETTINGS = [
   },
   {
     id:'horror',version:'1.0.0',
-    meta:{name:'Horror',description:'Something ancient stirs in the dark. Sanity is fragile, monsters are real, and survival is never guaranteed.',author:'official',created:'2026-06-05',locked:false,thumbnail:''},
+    meta:{name:'Horror',description:'Something ancient stirs in the dark. Sanity is fragile, monsters are real, and survival is never guaranteed.',author:'official',created:'2026-06-05',locked:false,thumbnail:'',currency_name:'Infamy'},
     classes:[
       {id:'stalker',name:'Stalker',description:'Patient predators who hunt from shadow. They win before the fight begins.',attribute_contribution:{physical:2,mental:6,supernatural:4}},
       {id:'brawler',name:'Brawler',description:'Raw aggression incarnate. They take the hit and keep coming.',attribute_contribution:{physical:8,mental:2,supernatural:2}},
@@ -370,7 +370,7 @@ function newSetting(){
   const id='custom_'+Date.now();
   const s={
     id,version:'1.0.0',
-    meta:{name:'New Setting',description:'',author:'custom',created:new Date().toISOString().split('T')[0],locked:false,thumbnail:''},
+    meta:{name:'New Setting',description:'',author:'custom',created:new Date().toISOString().split('T')[0],locked:false,thumbnail:'',currency_name:'Gold'},
     classes:[
       {id:'class1',name:'Class 1',description:'',attribute_contribution:{physical:5,mental:5,supernatural:5}},
       {id:'class2',name:'Class 2',description:'',attribute_contribution:{physical:5,mental:5,supernatural:5}},
@@ -507,6 +507,7 @@ function renderEditor(){
         <div class="field"><label>Author</label><input value="${s.meta.author}" oninput="updateMeta('author',this.value)"/></div>
         <div class="field"><label>Version</label><input value="${s.version}" oninput="updateVersion(this.value)"/></div>
       </div>
+      <div class="field" style="margin-top:12px"><label>Currency Name</label><input value="${s.meta.currency_name||''}" oninput="updateMeta('currency_name', this.value)" placeholder="e.g. Gold, Credits, Infamy"/></div>
       <div class="toggle-row"><span class="toggle-label">Locked (visible but not playable)</span><label class="toggle"><input type="checkbox" ${s.meta.locked?'checked':''} onchange="toggleLock()"/><span class="toggle-slider"></span></label></div>
     </div>
   </div>
